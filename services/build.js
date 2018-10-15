@@ -1,7 +1,9 @@
 const glob = require('glob');
 const path = require('path');
 const config = require(process.env.CONFIG_PATH);
-const routes = require(path.join(config.SERVICES_PATH, 'routes'));
+const {SERVICES_PATH} = config;
+const routes = require(path.join(SERVICES_PATH, 'routes'));
+const wrapper = require(path.join(SERVICES_PATH, 'wrapper'));
 const _ = require('lodash');
 const context = {
   storage: null,
@@ -33,7 +35,7 @@ const build = {
         if (typeof namespace === 'string' && namespace.length > 1) {
           url = namespace + url;
         }
-        app[httpMethod.toLowerCase()](url, controllerMethod.bind(context));
+        app[httpMethod.toLowerCase()](url, wrapper(controllerMethod.bind(context)));
       });
       
     });
