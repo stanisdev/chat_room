@@ -1,0 +1,15 @@
+const http = require('http');
+const path = require('path');
+const rootDir = path.dirname(__dirname);
+const configPath = path.join(rootDir, '/config');
+const config = require(configPath);
+
+process.env.CONFIG_PATH = configPath;
+
+const app = require(config.APP_FILE);
+const port = parseInt(process.env.PORT, 10) || config.PORT_DEFAULT;
+
+const server = http.createServer(app);
+server.listen(port, () => {
+  console.log(`API listening on port ${port}`);
+});
