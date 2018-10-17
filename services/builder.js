@@ -2,14 +2,13 @@ const glob = require('glob');
 const path = require('path');
 const config = require(process.env.CONFIG_PATH);
 const {SERVICES_PATH} = config;
-const routes = require(path.join(SERVICES_PATH, 'routes'));
-const wrapper = require(path.join(SERVICES_PATH, 'wrapper'));
+const {routes, wrapper, errors} = require(SERVICES_PATH);
 const _ = require('lodash');
 const context = {
   storage: null,
 };
 
-const build = {
+const builder = {
   init(app) {
     const controllers = glob.sync(config.CONTROLLERS_PATH + '/*.js');
 
@@ -39,7 +38,9 @@ const build = {
       });
       
     });
+
+    errors(app);
   }
 };
 
-module.exports = build;
+module.exports = builder;

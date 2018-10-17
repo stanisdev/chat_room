@@ -14,8 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const config = require(process.env.CONFIG_PATH);
-const services = require(config.SERVICES_PATH);
-services.build.init(app);
+const builder = require(path.join(config.SERVICES_PATH, 'builder'));
+builder.init(app);
 
 module.exports = app;
-services.errors(app);
