@@ -3,13 +3,23 @@ const path = require('path');
 const rootDir = path.dirname(__dirname);
 const configPath = path.join(rootDir, '/config');
 const config = require(configPath);
+const log = require(config.LOGGER_PATH)(__filename);
 
 process.env.CONFIG_PATH = configPath;
 
-const app = require(config.APP_FILE);
-const port = parseInt(process.env.PORT, 10) || config.PORT_DEFAULT;
+const storages = require(config.STORAGES_PATH);
+storages.authenticate()
+  .then(() => {
+    log.info('Database connection has been established successfully');
+    const app = require(config.APP_FILE);
+    const port = parseInt(process.env.PORT, 10) || config.PORT_DEFAULT;
+    const server = http.createServer(app);
 
-const server = http.createServer(app);
-server.listen(port, () => {
-  console.log(`API listening on port ${port}`);
-});
+    server.listen(port, () => {
+      log.info(`API listening on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    log.error('App cannot be started');
+    console.log(err);
+  });

@@ -31,12 +31,12 @@ module.exports = {
       status: {
         type: Sequelize.TINYINT,
         allowNull: false,
-        deafult: 0, // 0 - not activated, 1 - activated
+        defaultValue: 0, // 0 - not activated, 1 - activated
       },
       blocked: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defult: false,
+        defaultValue: false,
       },
       last_login: {
         type: Sequelize.DATE,

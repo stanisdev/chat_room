@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/www",
-    "start:dev": "NODE_ENV=development nodemon bin/www"
+    "start:dev": "NODE_ENV=development STORAGE_DIRECTION=sequelize nodemon bin/www"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   "dependencies": {
     "bcrypt": "3.0.1",
     "body-parser": "1.18.3",
+    "color-logs": "^0.6.1",
     "cors": "2.8.4",
     "express": "4.16.4",
     "glob": "7.1.3",
