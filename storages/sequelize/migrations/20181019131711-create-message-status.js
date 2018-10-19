@@ -1,11 +1,21 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('ChatMembers', {
+    return queryInterface.createTable('MessageStatuses', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      message_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Messages',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false,
       },
       user_id: {
         type: Sequelize.INTEGER,
@@ -17,22 +27,14 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false,
       },
-      chat_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Chats',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+      status: {
+        type: Sequelize.TINYINT,
+        defaultValue: 0, // 0 - not delivired, 1 - delivired, 2 - has been readed
         allowNull: false,
-      },
-      role: {
-        type: Sequelize.TINYINT, // 0 - common member, 1 - administrator
       },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ChatMembers');
+    return queryInterface.dropTable('MessageStatuses');
   }
 };

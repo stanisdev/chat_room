@@ -10,13 +10,13 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING(100),
-        allowNull: false,
       },
       image: {
         type: Sequelize.STRING(150),
       },
       members_count: {
         type: Sequelize.INTEGER,
+        defaultValue: 2,
         allowNull: false,
       },
       type: {
