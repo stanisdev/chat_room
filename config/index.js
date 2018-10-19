@@ -13,4 +13,5 @@ module.exports = {
   SEQUELIZE_PATH: path.join(storagesPath, 'sequelize', 'models'),
   STORAGE_DIRECTIONS: ['sequelize'],
   LOGGER_PATH: path.join(servicesPath, 'logger'),
+  FILTERS_PATH: path.join(rootDir, 'filters'),
 };
