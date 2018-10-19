@@ -24,11 +24,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 0, // 0 - common chat, 1 - group chat
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

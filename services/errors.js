@@ -1,4 +1,5 @@
 const status = require('http-status');
+const log = require(process.env.LOGGER_PATH)(__filename);
 
 module.exports = (app) => {
   /**
@@ -12,6 +13,7 @@ module.exports = (app) => {
    * 500
    */
   app.use((err, req, res, next) => {
+    log.error('An error occurs');
     console.log(err.stack);
     let response = {};
     if (process.env.NODE_ENV === 'development') {

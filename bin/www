@@ -6,6 +6,7 @@ const config = require(configPath);
 const log = require(config.LOGGER_PATH)(__filename);
 
 process.env.CONFIG_PATH = configPath;
+process.env.LOGGER_PATH = config.LOGGER_PATH;
 
 const storages = require(config.STORAGES_PATH);
 storages.authenticate()

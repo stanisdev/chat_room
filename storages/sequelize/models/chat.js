@@ -19,8 +19,29 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   Chat.associate = function(models) {
-    // associations can be defined here
+    Chat.membersAssociation = Chat.belongsToMany(models.User, {
+      through: models.ChatMember,
+      as: 'Members',
+    });
   };
   
+  Chat.getMembers = async function(chatId) {
+    const chat = await Chat.findOne({
+      include:[
+        Chat.membersAssociation,
+      ],
+      where: {
+        id: chatId,
+      }
+    });
+    const members = [];
+    chat.Members.forEach((member) => {
+      members.push(
+        member.get({plain: true})
+      );
+    });
+    return members;
+  };
+
   return Chat;
 };
