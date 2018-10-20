@@ -24,7 +24,8 @@ module.exports = wrapper(async(req, res, next) => {
   const {id, personal_key} = userData;
   const user = await db.User.findOneByParams({ 
     id, 
-    personal_key, 
+    personal_key,
+    blocked: false,
   });
   if (!(user instanceof Object)) {
     return fail(res);

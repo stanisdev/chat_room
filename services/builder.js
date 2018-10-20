@@ -2,13 +2,12 @@ const glob = require('glob');
 const path = require('path');
 const config = require(process.env.CONFIG_PATH);
 const {SERVICES_PATH} = config;
+const db = require(config.STORAGES_PATH).getConnection();
 const {routes, wrapper, errors} = require(SERVICES_PATH);
 const {auth} = require(config.FILTERS_PATH);
 const _validators = require(config.VALIDATORS_PATH);
 const _ = require('lodash');
-const context = {
-  storage: null,
-};
+const context = {db};
 
 const builder = {
   init(app) {
@@ -47,7 +46,7 @@ const builder = {
             if (!(classValidator instanceof Object)) {
               throw new Error(`Validator's class with name "${className}" does not exists`);
             }
-            args.push(classValidator[methodName])
+            args.push(wrapper(classValidator[methodName]))
           });
         }
         args.push(

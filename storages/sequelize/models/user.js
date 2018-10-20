@@ -52,5 +52,11 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  User.countByParams = function(params) {
+    return User.count({
+      where: params,
+    });
+  }
+
   return User;
 };

@@ -25,5 +25,12 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  Chat.createNew = async function() {
+    return true;
+  };
+
+  Chat.checkDialogExistence = function(userId, interlocutorId) {
+  };
+
   return Chat;
 };
