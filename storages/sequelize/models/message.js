@@ -1,27 +1,27 @@
 module.exports = (sequelize, DataTypes) => {
   const Message = sequelize.define('Message', {
     user_id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     chat_id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     type: {
-      type: Sequelize.TINYINT,
+      type: DataTypes.TINYINT,
       defaultValue: 0, // 0 - text/plain
       allowNull: false,
     },
     content: {
-      type: Sequelize.TEXT,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     edited: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
     },
     quote_for: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
     },
   }, {});
 

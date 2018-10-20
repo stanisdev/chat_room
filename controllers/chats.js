@@ -8,6 +8,12 @@ class Chats {
       },
     ]);
   }
+
+  async create(req, res, next) {
+    res.json([{
+      message: 'Created',
+    }]);
+  }
 }
 
 module.exports = Chats;

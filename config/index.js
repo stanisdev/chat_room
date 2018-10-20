@@ -14,4 +14,5 @@ module.exports = {
   STORAGE_DIRECTIONS: ['sequelize'],
   LOGGER_PATH: path.join(servicesPath, 'logger'),
   FILTERS_PATH: path.join(rootDir, 'filters'),
+  VALIDATORS_PATH: path.join(rootDir, 'validators'),
 };

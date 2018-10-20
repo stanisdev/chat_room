@@ -1,5 +1,7 @@
 const config = require(process.env.CONFIG_PATH);
 const storageDirection = process.env.STORAGE_DIRECTION;
+const storagePath = config[storageDirection.toUpperCase() + '_PATH'];
+let db;
 
 module.exports = {
   async authenticate() {
@@ -8,10 +10,13 @@ module.exports = {
     }
     switch (storageDirection) {
       case 'sequelize':
-        db = require(config[storageDirection.toUpperCase() + '_PATH']);
+        db = require(storagePath);
         await db.sequelize.authenticate();
         break;
     }
     return true;
+  },
+  getConnection() {
+    return db;
   }
 };

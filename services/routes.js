@@ -11,9 +11,15 @@ module.exports = {
   chats: {
     namespace: '/chats',
     handlers: {
+      create: {
+        route: ['/', 'POST'],
+        validators: ['chats.create'],
+        filters: [],
+      },
       getAll: {
         route: ['/all', 'GET'],
-        filters: []
+        filters: [],
+        // noAuth: true,
       }
     }
   }
