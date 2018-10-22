@@ -5,6 +5,11 @@ module.exports = {
       getAll: {
         route: ['/all', 'GET'],
         filters: []
+      },
+      create: {
+        route: ['/:chat_id', 'POST'],
+        filters: ['chats.isChatMember'],
+        validators: ['chats.id', 'messages.create'],
       }
     }
   },

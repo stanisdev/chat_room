@@ -1,11 +1,5 @@
 const Joi = require('joi');
 const only = require('only');
-const status = require('http-status');
-const config = require(process.env.CONFIG_PATH);
-const db = require(config.STORAGES_PATH).getConnection();
-const fail = (res) => {
-  res.status(status.BAD_REQUEST).json({});
-};
 
 module.exports = {
   async create(req, res, next) {
@@ -17,7 +11,7 @@ module.exports = {
     });
     const result = Joi.validate(data, schema);
     if (result.error !== null) {
-      return fail(res);
+      return this.fail(res);
     }
     const chatType = +req.body.type;
     let members = req.body.members.filter((member) => req.user.id !== +member); // Remove user's id
@@ -28,11 +22,25 @@ module.exports = {
       groupChat: chatType === 1 && members.length < 1,
     };
     if (wrong.dialog || wrong.groupChat) {
-      return fail(res);
+      return this.fail(res);
     }
-    const count = await db.User.countByParams({ id: members }); // Used wrong user id
+    const count = await this.db.User.countByParams({ // Used wrong user id
+      id: members,
+    });
     if (count !== members.length) {
-      return fail(res);
+      return this.fail(res);
+    }
+    next();
+  },
+
+  id(req, res, next) {
+    const schema = Joi.object().keys({
+      chat_id: Joi.number().integer().min(1).required(),
+    });
+    const data = only(req.params, 'chat_id');
+    const result = Joi.validate(data, schema);
+    if (result.error !== null) {
+      return this.fail(res);
     }
     next();
   }

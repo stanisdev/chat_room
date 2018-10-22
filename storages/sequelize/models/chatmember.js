@@ -18,5 +18,20 @@ module.exports = (sequelize, DataTypes) => {
   ChatMember.associate = function(models) {
   };
 
+  ChatMember.findOneByParams = function(params) {
+    return ChatMember.findOne({
+      where: params,
+      limit: 1,
+      raw: true,
+    });
+  };
+
+  ChatMember.findAllByParams = function(params) {
+    return ChatMember.findAll({
+      where: params,
+      raw: true,
+    });
+  };
+
   return ChatMember;
 };
