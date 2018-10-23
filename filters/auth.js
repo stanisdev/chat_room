@@ -6,8 +6,8 @@ const fail = (res) => {
   res.status(status.UNAUTHORIZED).json({});
 };
 
-module.exports = wrapper(async(req, res, next) => {
-  let header = req.headers.authorization;
+module.exports = wrapper(async (req, res, next) => {
+  const header = req.headers.authorization;
   if (typeof header !== 'string') {
     return fail(res);
   }
@@ -21,10 +21,10 @@ module.exports = wrapper(async(req, res, next) => {
   } catch (err) {
     return fail(res);
   }
-  const {id, personal_key} = userData;
-  const user = await db.User.findOneByParams({ 
-    id, 
-    personal_key,
+  const {id} = userData;
+  const user = await db.User.findOneByParams({
+    id,
+    personal_key: userData.personal_key,
     blocked: false,
   });
   if (!(user instanceof Object)) {

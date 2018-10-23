@@ -1,5 +1,4 @@
 class Chats {
-
   async getAll(req, res, next) {
     res.json([
       {
@@ -15,14 +14,14 @@ class Chats {
     if (type === 0) {
       const check = await this.db.Chat.checkDialogExistence(userId, ...members);
       if (check instanceof Object && check.exists === true) {
-        const chat = await this.db.Chat.findByParams({ 
+        const chat = await this.db.Chat.findByParams({
           id: check.chatId,
         });
         return res.json(chat);
       }
     }
     members.push(userId);
-    const chat = await this.db.Chat.createNew({ type, members });
+    const chat = await this.db.Chat.createNew({type, members});
     res.json(chat);
   }
 }

@@ -30,28 +30,27 @@ module.exports = (sequelize, DataTypes) => {
     let {members, type} = params;
     let _chat;
     return new Promise((resolve, reject) => {
-      sequelize.transaction(function (t) {
-
+      sequelize.transaction(function(t) {
         return Chat.create({
           type,
           members_count: members.count,
-        }, {transaction: t}).then(function (chat) {
+        }, {transaction: t}).then(function(chat) {
           _chat = chat;
           members = members.map((id) => {
             return {
-              user_id: id, 
+              user_id: id,
               chat_id: chat.get('id'),
             };
           });
           return models.ChatMember.bulkCreate(members, {transaction: t});
         });
       })
-        .then(() => {
-          resolve(_chat.get({
-            plain: true,
-          }));
-        })
-        .catch(reject);
+          .then(() => {
+            resolve(_chat.get({
+              plain: true,
+            }));
+          })
+          .catch(reject);
     });
   };
 
@@ -65,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
     `;
     const [result] = await sequelize.query(query, {
       type: sequelize.QueryTypes.SELECT,
-      replacements: [userId, interlocutorId]
+      replacements: [userId, interlocutorId],
     });
     const exists = result instanceof Object && result.count === 2;
     return {

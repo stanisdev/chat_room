@@ -10,5 +10,5 @@ module.exports = {
       return this.fail(res);
     }
     next();
-  } 
+  },
 };

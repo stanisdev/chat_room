@@ -11,5 +11,5 @@ module.exports = {
   },
   verify(token) {
     return util.promisify(jwt.verify)(token, key);
-  }
+  },
 };

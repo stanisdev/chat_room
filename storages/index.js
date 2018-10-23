@@ -18,5 +18,5 @@ module.exports = {
   },
   getConnection() {
     return db;
-  }
+  },
 };

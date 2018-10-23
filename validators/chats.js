@@ -4,7 +4,7 @@ const only = require('only');
 module.exports = {
   async create(req, res, next) {
     const data = only(req.body, 'type members');
-    
+
     const schema = Joi.object().keys({
       type: Joi.number().integer().min(0).max(1).required(),
       members: Joi.array().items(Joi.number().integer().min(1)).required(),
@@ -14,7 +14,8 @@ module.exports = {
       return this.fail(res);
     }
     const chatType = +req.body.type;
-    let members = req.body.members.filter((member) => req.user.id !== +member); // Remove user's id
+    let members = req.body.members
+        .filter((member) => req.user.id !== +member); // Remove user's id
     members = [...new Set(members)]; // Unique values
 
     const wrong = {
@@ -43,5 +44,5 @@ module.exports = {
       return this.fail(res);
     }
     next();
-  }
+  },
 };

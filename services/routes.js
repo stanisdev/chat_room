@@ -4,14 +4,14 @@ module.exports = {
     handlers: {
       getAll: {
         route: ['/all', 'GET'],
-        filters: []
+        filters: [],
       },
       create: {
         route: ['/:chat_id', 'POST'],
         filters: ['chats.isChatMember'],
         validators: ['chats.id', 'messages.create'],
-      }
-    }
+      },
+    },
   },
   chats: {
     namespace: '/chats',
@@ -25,7 +25,7 @@ module.exports = {
         route: ['/all', 'GET'],
         filters: [],
         // noAuth: true,
-      }
-    }
-  }
+      },
+    },
+  },
 };

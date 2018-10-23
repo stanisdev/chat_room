@@ -1,6 +1,6 @@
 const path = require('path');
 const rootDir = path.dirname(__dirname);
-const storagesPath = path.join(rootDir, 'storages')
+const storagesPath = path.join(rootDir, 'storages');
 const servicesPath = path.join(rootDir, 'services');
 
 module.exports = {

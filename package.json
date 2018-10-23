@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/www",
-    "start:dev": "NODE_ENV=development STORAGE_DIRECTION=sequelize nodemon bin/www"
+    "start:dev": "NODE_ENV=development STORAGE_DIRECTION=sequelize nodemon bin/www",
+    "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ *.js --fix"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
     "sequelize-cli": "5.1.0"
   },
   "devDependencies": {
+    "commitizen": "^3.0.4",
     "eslint": "^5.7.0",
     "eslint-config-google": "^0.11.0",
     "nodemon": "^1.18.4"

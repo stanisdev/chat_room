@@ -12,7 +12,7 @@ const context = {
   db,
   fail: (res) => {
     res.status(status.BAD_REQUEST).json({});
-  }
+  },
 };
 
 const builder = {
@@ -20,19 +20,19 @@ const builder = {
     const controllers = glob.sync(config.CONTROLLERS_PATH + '/*.js');
 
     controllers.forEach((controller) => {
-
       const controllerName = path.basename(controller).slice(0, -3);
       if (!routes.hasOwnProperty(controllerName)) {
         throw new Error(`Controller ${controllerName} does not exist`);
       }
-      const controllerClass = require(controller);
-      const controllerInstance = new controllerClass();
+      const ControllerClass = require(controller);
+      const controllerInstance = new ControllerClass();
       const {handlers, namespace} = routes[controllerName];
 
       _.forEach(handlers, (handler, controllerMethodName) => {
         const controllerMethod = controllerInstance[controllerMethodName];
         if (!(controllerMethod instanceof Function)) {
-          throw new Error(`Controller ${controllerName} does not contain required method ${controllerMethodName}`);
+          throw new Error(`Controller ${controllerName} does not contain `+
+          `required method ${controllerMethodName}`);
         }
 
         const {route, noAuth, validators, filters} = handler;
@@ -50,13 +50,14 @@ const builder = {
             const [className, validatorName] = validator.split('.');
             const classValidator = _validators[className];
             if (!(classValidator instanceof Object)) {
-              throw new Error(`Validator's class with name "${className}" does not exists`);
+              throw new Error(`Validator's class with name "${className}" `+
+              `does not exists`);
             }
             const _validator = classValidator[validatorName];
             if (!(_validator instanceof Function)) {
               throw new Error(`The validator "${validator}" is expected as a function`);
             }
-            args.push(wrapper(_validator.bind(context)))
+            args.push(wrapper(_validator.bind(context)));
           });
         }
         if (Array.isArray(filters)) { // Filters
@@ -74,15 +75,14 @@ const builder = {
           });
         }
         args.push(
-          wrapper(controllerMethod.bind(context))
+            wrapper(controllerMethod.bind(context))
         );
-        app[httpMethod.toLowerCase()].apply(app, args);
+        app[httpMethod.toLowerCase()](...args);
       });
-      
     });
 
     errors(app);
-  }
+  },
 };
 
 module.exports = builder;

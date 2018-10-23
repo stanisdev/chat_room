@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsToMany(models.Chat, {
       through: models.ChatMember,
       as: 'Chats',
-    })
+    });
   };
 
   User.findOneByParams = function(params) {
@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     return User.count({
       where: params,
     });
-  }
+  };
 
   return User;
 };

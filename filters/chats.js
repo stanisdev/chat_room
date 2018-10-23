@@ -10,5 +10,5 @@ module.exports = {
       return res.status(status.FORBIDDEN).json({});
     }
     next();
-  }
+  },
 };

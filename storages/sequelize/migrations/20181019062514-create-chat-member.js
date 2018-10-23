@@ -5,7 +5,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       user_id: {
         type: Sequelize.INTEGER,
@@ -34,5 +34,5 @@ module.exports = {
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('ChatMembers');
-  }
+  },
 };
