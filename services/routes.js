@@ -3,8 +3,8 @@ module.exports = {
     namespace: '/messages',
     handlers: {
       getAll: {
-        route: ['/all', 'GET'],
-        filters: [],
+        route: ['/:chat_id', 'GET'],
+        filters: ['chats.isChatMember'],
       },
       create: {
         route: ['/:chat_id', 'POST'],

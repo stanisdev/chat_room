@@ -1,7 +1,7 @@
 const status = require('http-status');
 const log = require(process.env.LOGGER_PATH)(__filename);
 
-module.exports = (app) => {
+module.exports = app => {
   /**
    * 404
    */
@@ -19,7 +19,10 @@ module.exports = (app) => {
     if (process.env.NODE_ENV === 'development') {
       response = {
         error: err.toString(),
-        stack: err.stack.toString().split('\n').map((msg) => msg.trim()),
+        stack: err.stack
+          .toString()
+          .split('\n')
+          .map(msg => msg.trim()),
       };
     }
     res.status(status.INTERNAL_SERVER_ERROR).json(response);

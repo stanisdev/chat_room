@@ -1,22 +1,26 @@
 module.exports = (sequelize, DataTypes) => {
-  const Chat = sequelize.define('Chat', {
-    name: {
-      type: DataTypes.STRING(100),
+  const Chat = sequelize.define(
+    'Chat',
+    {
+      name: {
+        type: DataTypes.STRING(100),
+      },
+      image: {
+        type: DataTypes.STRING(150),
+      },
+      members_count: {
+        type: DataTypes.INTEGER,
+        defaultValue: 2,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.TINYINT,
+        allowNull: false,
+        defaultValue: 0, // 0 - dialog, 1 - group chat
+      },
     },
-    image: {
-      type: DataTypes.STRING(150),
-    },
-    members_count: {
-      type: DataTypes.INTEGER,
-      defaultValue: 2,
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-      defaultValue: 0, // 0 - dialog, 1 - group chat
-    },
-  }, {});
+    {}
+  );
 
   Chat.associate = function(models) {
     Chat.belongsToMany(models.User, {
@@ -26,31 +30,37 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Chat.createNew = function(params) {
-    const {models} = sequelize;
-    let {members, type} = params;
+    const { models } = sequelize;
+    let { members, type } = params;
     let _chat;
     return new Promise((resolve, reject) => {
-      sequelize.transaction(function(t) {
-        return Chat.create({
-          type,
-          members_count: members.count,
-        }, {transaction: t}).then(function(chat) {
-          _chat = chat;
-          members = members.map((id) => {
-            return {
-              user_id: id,
-              chat_id: chat.get('id'),
-            };
+      sequelize
+        .transaction(function(t) {
+          return Chat.create(
+            {
+              type,
+              members_count: members.count,
+            },
+            { transaction: t }
+          ).then(function(chat) {
+            _chat = chat;
+            members = members.map(id => {
+              return {
+                user_id: id,
+                chat_id: chat.get('id'),
+              };
+            });
+            return models.ChatMember.bulkCreate(members, { transaction: t });
           });
-          return models.ChatMember.bulkCreate(members, {transaction: t});
-        });
-      })
-          .then(() => {
-            resolve(_chat.get({
+        })
+        .then(() => {
+          resolve(
+            _chat.get({
               plain: true,
-            }));
-          })
-          .catch(reject);
+            })
+          );
+        })
+        .catch(reject);
     });
   };
 

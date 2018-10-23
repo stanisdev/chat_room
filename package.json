@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/www",
     "start:dev": "NODE_ENV=development STORAGE_DIRECTION=sequelize nodemon bin/www",
-    "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ *.js --fix"
+    "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ *.js",
+    "prettier": "./node_modules/.bin/prettier --trailing-comma=es5 --single-quote --write \"**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "commitizen": "^3.0.4",
     "eslint": "^5.7.0",
     "eslint-config-google": "^0.11.0",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "prettier": "1.14.3"
   }
 }

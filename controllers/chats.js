@@ -9,7 +9,7 @@ class Chats {
   }
 
   async create(req, res, next) {
-    const {type, members} = req.body;
+    const { type, members } = req.body;
     const userId = req.user.id;
     if (type === 0) {
       const check = await this.db.Chat.checkDialogExistence(userId, ...members);
@@ -21,7 +21,7 @@ class Chats {
       }
     }
     members.push(userId);
-    const chat = await this.db.Chat.createNew({type, members});
+    const chat = await this.db.Chat.createNew({ type, members });
     res.json(chat);
   }
 }

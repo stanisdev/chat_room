@@ -5,7 +5,11 @@ let db;
 
 module.exports = {
   async authenticate() {
-    if (!config.STORAGE_DIRECTIONS.some((direction) => direction === storageDirection)) {
+    if (
+      !config.STORAGE_DIRECTIONS.some(
+        direction => direction === storageDirection
+      )
+    ) {
       throw new Error('The storage is not correct or was not specified');
     }
     switch (storageDirection) {

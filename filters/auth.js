@@ -1,8 +1,8 @@
 const status = require('http-status');
 const config = require(process.env.CONFIG_PATH);
-const {jwt, wrapper} = require(config.SERVICES_PATH);
+const { jwt, wrapper } = require(config.SERVICES_PATH);
 const db = require(config.STORAGES_PATH).getConnection();
-const fail = (res) => {
+const fail = res => {
   res.status(status.UNAUTHORIZED).json({});
 };
 
@@ -21,7 +21,7 @@ module.exports = wrapper(async (req, res, next) => {
   } catch (err) {
     return fail(res);
   }
-  const {id} = userData;
+  const { id } = userData;
   const user = await db.User.findOneByParams({
     id,
     personal_key: userData.personal_key,
