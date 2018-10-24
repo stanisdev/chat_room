@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      chat_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -21,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  MessageStatus.associate = function(models) {};
+  MessageStatus.associate = function(models) {
+    MessageStatus.belongsTo(models.Message);
+  };
 
   return MessageStatus;
 };

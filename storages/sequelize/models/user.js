@@ -45,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       through: models.ChatMember,
       as: 'Chats',
     });
+    User.hasMany(models.Message);
   };
 
   User.findOneByParams = function(params) {

@@ -3,7 +3,7 @@ const path = require('path');
 const config = require(process.env.CONFIG_PATH);
 const { SERVICES_PATH } = config;
 const db = require(config.STORAGES_PATH).getConnection();
-const { routes, wrapper, errors } = require(SERVICES_PATH);
+const { routes, wrapper, errors, other } = require(SERVICES_PATH);
 const _filters = require(config.FILTERS_PATH);
 const _validators = require(config.VALIDATORS_PATH);
 const _ = require('lodash');
@@ -13,6 +13,7 @@ const context = {
   fail: res => {
     res.status(status.BAD_REQUEST).json({});
   },
+  services: other,
 };
 
 const builder = {

@@ -30,13 +30,16 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
-  Message.associate = function(models) {};
+  Message.associate = function(models) {
+    Message.hasMany(models.MessageStatus);
+    Message.belongsTo(models.User);
+  };
 
   Message.createNew = function(params) {
     const { userId, chatId, content, type } = params;
     return new Promise((resolve, reject) => {
       models.ChatMember.findAllByParams({
-        chat_id: params.chatId,
+        chat_id: chatId,
       })
         .then(members => {
           sequelize
@@ -59,6 +62,7 @@ module.exports = (sequelize, DataTypes) => {
                   return {
                     user_id: member.user_id,
                     message_id: message.get('id'),
+                    chat_id: chatId,
                     status,
                   };
                 });
@@ -80,8 +84,48 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  Message.findAllByChat = function(params) {
-    return [{ 1: 1 }];
+  Message.findAllByChat = async function(params) {
+    const { userId, chatId, limit, offset } = params;
+    const messages = await models.MessageStatus.findAll({
+      where: {
+        user_id: userId,
+        chat_id: chatId,
+      },
+      attributes: ['status'],
+      include: [
+        {
+          model: models.Message,
+          attributes: ['id', 'type', 'content', 'edited', 'quote_for'],
+          include: [
+            {
+              model: models.User,
+              attributes: ['id', 'name'],
+            },
+          ],
+        },
+      ],
+      order: [['id', 'DESC']],
+      limit,
+      offset,
+      raw: true,
+    });
+    return messages.map(message => {
+      const user = {};
+      Object.keys(message).forEach(key => {
+        const value = message[key];
+        if (key.startsWith('Message')) {
+          delete message[key];
+          key = key.substr(8);
+          message[key] = value;
+        }
+        if (key.startsWith('User')) {
+          user[key.substr(5)] = value;
+          delete message[key];
+        }
+      });
+      message.user = user;
+      return message;
+    });
   };
 
   return Message;
