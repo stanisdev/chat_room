@@ -19,7 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  ChatMember.associate = function(models) {};
+  ChatMember.associate = function(models) {
+    ChatMember.belongsTo(models.Chat);
+  };
 
   ChatMember.findOneByParams = function(params) {
     return ChatMember.findOne({

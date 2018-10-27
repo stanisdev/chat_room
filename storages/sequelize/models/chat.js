@@ -1,4 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
+  const { models, Op } = sequelize;
   const Chat = sequelize.define(
     'Chat',
     {
@@ -27,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       through: models.ChatMember,
       as: 'Members',
     });
+    Chat.hasMany(models.ChatMember);
   };
 
   Chat.createNew = function(params) {
@@ -90,6 +92,82 @@ module.exports = (sequelize, DataTypes) => {
     return chat.get({
       plain: true,
     });
+  };
+
+  Chat.getManyByUser = async function(params) {
+    const { userId, limit, offset } = params;
+    const memberships = await models.ChatMember.findAll({ // Find users's chats
+      where: {
+        user_id: userId,
+      },
+      include: [
+        {
+          model: models.Chat,
+          attributes: ['id', 'name', 'image', 'members_count', 'type'],
+        },
+      ],
+      limit,
+      offset,
+    });
+    const query = `
+    SELECT m.id, m.chat_id, m.content, m.type, m.created_at, ms.\`status\`, u.\`name\` \`user.name\`, u.id \`user.id\`
+    FROM MessageStatuses ms 
+    INNER JOIN Messages m ON ms.message_id = m.id
+    INNER JOIN Users u ON m.user_id = u.id
+    WHERE ms.id IN (
+      SELECT MAX(id) as id 
+      FROM MessageStatuses 
+      WHERE user_id = ? AND chat_id IN (?)
+      GROUP BY chat_id
+    )`;
+    const chatIds = memberships.map(membership => membership.get('chat_id'));
+    const tasks = [];
+  
+    tasks.push(sequelize.query(query, { // Last messages
+      type: sequelize.QueryTypes.SELECT,
+      replacements: [userId, chatIds],
+    }));
+    tasks.push(models.MessageStatus.findAll({ // Unread messages
+      where: {
+        chat_id: chatIds,
+        user_id: userId,
+        status: {
+          [Op.lt]: 2,
+        },
+      },
+      group: ['chat_id'],
+      attributes: ['chat_id', [sequelize.fn('COUNT', 'chat_id'), 'totalCount']],
+      raw: true,
+    }));
+
+    const [lastMessages, unreadMessages] = await Promise.all(tasks);
+    const chats = memberships.map(membership => {
+      const chat = membership.Chat.get({
+        plain: true,
+      });
+      chat.membership = {
+        role: membership.get('role'),
+      };
+      let lastMessage = lastMessages.find((message) => message.chat_id === chat.id);
+      if (lastMessage instanceof Object) {
+        const user = {};
+        Object.keys(lastMessage).forEach((key) => {
+          if (key.startsWith('user.')) {
+            const value = lastMessage[key];
+            delete lastMessage[key];
+            user[key.substr(5)] = value;
+          }
+        });
+        lastMessage.user = user;
+      } else {
+        lastMessage = {};
+      }
+      chat.last_message = lastMessage;
+      const _unreadMessages = unreadMessages.find((element) => element.chat_id === chat.id);
+      chat.unread_messages = _unreadMessages instanceof Object ? _unreadMessages.totalCount : 0;
+      return chat;
+    });
+    return chats;
   };
 
   return Chat;

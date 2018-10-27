@@ -22,7 +22,7 @@ module.exports = {
         filters: [],
       },
       getAll: {
-        route: ['/all', 'GET'],
+        route: ['/', 'GET'],
         filters: [],
         // noAuth: true,
       },

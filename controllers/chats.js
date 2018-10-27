@@ -1,11 +1,12 @@
 class Chats {
   async getAll(req, res, next) {
-    res.json([
-      {
-        id: 1,
-        name: 'Chat #1',
-      },
-    ]);
+    const limiter = this.services.limiter(req);
+    const params = {
+      userId: req.user.id,
+      ...limiter,
+    };
+    const chats = await this.db.Chat.getManyByUser(params);
+    res.json(chats);
   }
 
   async create(req, res, next) {

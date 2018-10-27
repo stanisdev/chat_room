@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Message.associate = function(models) {
     Message.hasMany(models.MessageStatus);
-    Message.belongsTo(models.User);
+    Message.belongsTo(models.User, { as: 'user' });
   };
 
   Message.createNew = function(params) {
@@ -86,7 +86,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Message.findAllByChat = async function(params) {
     const { userId, chatId, limit, offset } = params;
-    const messages = await models.MessageStatus.findAll({
+    const messageStatuses = await models.MessageStatus.findAll({
       where: {
         user_id: userId,
         chat_id: chatId,
@@ -100,6 +100,7 @@ module.exports = (sequelize, DataTypes) => {
             {
               model: models.User,
               attributes: ['id', 'name'],
+              as: 'user',
             },
           ],
         },
@@ -107,23 +108,12 @@ module.exports = (sequelize, DataTypes) => {
       order: [['id', 'DESC']],
       limit,
       offset,
-      raw: true,
     });
-    return messages.map(message => {
-      const user = {};
-      Object.keys(message).forEach(key => {
-        const value = message[key];
-        if (key.startsWith('Message')) {
-          delete message[key];
-          key = key.substr(8);
-          message[key] = value;
-        }
-        if (key.startsWith('User')) {
-          user[key.substr(5)] = value;
-          delete message[key];
-        }
+    return messageStatuses.map(messageStatus => {
+      const message = messageStatus.Message.get({
+        plain: true,
       });
-      message.user = user;
+      message.status = messageStatus.status;
       return message;
     });
   };
