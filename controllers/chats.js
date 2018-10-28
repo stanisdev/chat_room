@@ -25,6 +25,15 @@ class Chats {
     const chat = await this.db.Chat.createNew({ type, members });
     res.json(chat);
   }
+
+  async addMember(req, res, next) {
+    const params = {
+      chatId: req.params.chat_id,
+      userId: req.params.user_id,
+    };
+    await this.db.Chat.addMember(params);
+    res.json({});
+  }
 }
 
 module.exports = Chats;

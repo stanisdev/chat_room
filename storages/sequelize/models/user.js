@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
   User.findOneByParams = function(params) {
     return User.findOne({
       where: params,
-      attributes: ['id', 'name', 'email', 'status'],
+      attributes: ['id', 'name', 'email', 'status', 'blocked'],
       limit: 1,
       raw: true,
     });
