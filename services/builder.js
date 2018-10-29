@@ -1,18 +1,23 @@
 const glob = require('glob');
 const path = require('path');
 const config = require(process.env.CONFIG_PATH);
-const { SERVICES_PATH, CODES_PATH } = config;
+const { SERVICES_PATH, CODES_PATH, MAILER } = config;
 const codes = require(CODES_PATH);
 const db = require(config.STORAGES_PATH).getConnection();
 const { routes, wrapper, errors, other } = require(SERVICES_PATH);
+const mailer = require(MAILER.PATH);
 const _filters = require(config.FILTERS_PATH);
 const _validators = require(config.VALIDATORS_PATH);
 const _ = require('lodash');
 const status = require('http-status');
 const context = {
   db,
-  services: other,
+  services: {
+    ...other,
+    mailer,
+  },
   codes,
+  config,
   fail: res => {
     res.status(status.BAD_REQUEST).json({});
   },

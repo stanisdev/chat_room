@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
-const randomString = require("randomstring");
+const randomString = require('randomstring');
 
 module.exports = (sequelize, DataTypes) => {
+  const { models } = sequelize;
   const User = sequelize.define(
     'User',
     {
@@ -67,20 +68,41 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.createNew = async function(params) {
-    const {email, name, password} = params;
+    const { email, name, password } = params;
     const salt = randomString.generate(8);
     const hash = await bcrypt.hash(password + salt, 10);
 
-    return User.create({
-      name,
-      email,
-      password: hash,
-      salt,
-      status: 0,
-      blocked: false,
-      personal_key: randomString.generate(7),
+    return new Promise((resolve, reject) => {
+      const key = randomString.generate(25);
+      sequelize
+        .transaction(function(t) {
+          return User.create(
+            {
+              name,
+              email,
+              password: hash,
+              salt,
+              status: 0,
+              blocked: false,
+              personal_key: randomString.generate(7),
+            },
+            { transaction: t }
+          ).then(user => {
+            return models.UserKey.create(
+              {
+                user_id: user.get('id'),
+                key,
+              },
+              { transaction: t }
+            );
+          });
+        })
+        .then(() => {
+          resolve({ key });
+        })
+        .catch(reject);
     });
-  }
+  };
 
   return User;
 };

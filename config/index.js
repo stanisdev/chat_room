@@ -18,6 +18,14 @@ module.exports = {
   MESSAGES_PER_PAGE: 15,
   CODES_PATH: path.join(rootDir, 'config', 'codes.json'),
   MAILER: {
-
+    PATH: path.join(servicesPath, 'mailer'),
+    TEMPLATES_PATH: path.join(servicesPath, 'mailer', 'templates'),
+    FROM: process.env.MAILER_FROM,
+    AUTH: {
+      USER: process.env.MAILER_USER,
+      PASSWORD: process.env.MAILER_PASSWORD,
+    },
   },
+  APP_NAME: 'Chat Room',
+  SERVER_URL: 'http://magic.org',
 };
