@@ -16,4 +16,17 @@ module.exports = {
     }
     next();
   },
+
+  register(req, res, next) {
+    const schema = Joi.object().keys({
+      email: Joi.string().email().max(60).required(),
+      name: Joi.string().max(60).required(),
+      password: Joi.string().required(),
+    });
+    const result = Joi.validate(req.body, schema);
+    if (result.error !== null) {
+      return this.fail(res);
+    }
+    next();
+  }
 };

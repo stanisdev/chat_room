@@ -24,12 +24,26 @@ module.exports = {
       getAll: {
         route: ['/', 'GET'],
         filters: [],
-        // noAuth: true,
       },
       addMember: {
         route: ['/:chat_id/add_member/:user_id', 'GET'],
         filters: ['users.doesExist', 'users.isActive', 'chats.canAddMember'],
         validators: ['chats.id', 'users.id'],
+      },
+    },
+  },
+  users: {
+    namespace: '/users',
+    handlers: {
+      login: {
+        route: ['/login', 'POST'],
+        noAuth: true,
+      },
+      register: {
+        route: ['/register', 'POST'],
+        validators: ['users.register'],
+        filters: ['users.doesEmailExist'],
+        noAuth: true,
       },
     },
   },

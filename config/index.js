@@ -16,4 +16,8 @@ module.exports = {
   FILTERS_PATH: path.join(rootDir, 'filters'),
   VALIDATORS_PATH: path.join(rootDir, 'validators'),
   MESSAGES_PER_PAGE: 15,
+  CODES_PATH: path.join(rootDir, 'config', 'codes.json'),
+  MAILER: {
+
+  },
 };

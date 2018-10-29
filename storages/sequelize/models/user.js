@@ -1,3 +1,6 @@
+const bcrypt = require('bcrypt');
+const randomString = require("randomstring");
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -62,6 +65,22 @@ module.exports = (sequelize, DataTypes) => {
       where: params,
     });
   };
+
+  User.createNew = async function(params) {
+    const {email, name, password} = params;
+    const salt = randomString.generate(8);
+    const hash = await bcrypt.hash(password + salt, 10);
+
+    return User.create({
+      name,
+      email,
+      password: hash,
+      salt,
+      status: 0,
+      blocked: false,
+      personal_key: randomString.generate(7),
+    });
+  }
 
   return User;
 };

@@ -43,9 +43,12 @@
     "lodash": "4.17.11",
     "morgan": "1.9.1",
     "mysql2": "1.6.1",
+    "nodemailer": "^4.6.8",
     "only": "0.0.2",
+    "randomstring": "^1.1.5",
     "sequelize": "4.39.1",
-    "sequelize-cli": "5.1.0"
+    "sequelize-cli": "5.1.0",
+    "socket.io": "2.1.1"
   },
   "devDependencies": {
     "commitizen": "^3.0.4",

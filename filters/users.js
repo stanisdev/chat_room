@@ -17,4 +17,15 @@ module.exports = {
     }
     next();
   },
+
+  async doesEmailExist(req, res, next) {
+    const {email} = req.body;
+    const user = await this.db.User.findOneByParams({ email });
+    if (user instanceof Object) {
+      return res.json({
+        codes: [this.codes.EMAIL_REGISTERED],
+      });
+    }
+    next();
+  },
 };
