@@ -4,7 +4,6 @@ class Users {
   }
 
   async register(req, res, next) {
-    // @TODO: add "expiration" flag to "user.key"
     const { key } = await this.db.User.createNew(req.body);
     try {
       await this.services.mailer.send({
@@ -19,6 +18,15 @@ class Users {
       // @TODO: Create email resubmission mechanism
       return next(new Error('Email has not been sent'));
     }
+    res.json({});
+  }
+
+  async confirmEmail(req, res, next) {
+    const params = {
+      keyId: req.userKey.id,
+      userId: req.userKey.user_id,
+    };
+    await this.db.User.confirmEmail(params);
     res.json({});
   }
 }

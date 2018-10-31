@@ -17,7 +17,7 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false,
       },
-      key: {
+      key: { //@TODO: Should be set as unique
         type: Sequelize.STRING,
         allowNull: true,
       },

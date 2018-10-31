@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const only = require('only');
+const config = require(process.env.CONFIG_PATH);
 
 module.exports = {
   id(req, res, next) {
@@ -29,6 +30,19 @@ module.exports = {
       password: Joi.string().required(),
     });
     const result = Joi.validate(req.body, schema);
+    if (result.error !== null) {
+      return this.fail(res);
+    }
+    next();
+  },
+
+  async confirmEmail(req, res, next) {
+    const schema = Joi.object().keys({
+      key: Joi.string()
+        .length(config.USER_EMAIL_CONFIRMATION_KEY.LENGTH)
+        .required(),
+    });
+    const result = Joi.validate(req.params, schema);
     if (result.error !== null) {
       return this.fail(res);
     }

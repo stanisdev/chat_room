@@ -203,6 +203,7 @@ module.exports = (sequelize, DataTypes) => {
           },
           {
             where: { id: chatId },
+            limit: 1,
             transaction: t,
           }
         );

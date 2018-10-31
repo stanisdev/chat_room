@@ -28,4 +28,8 @@ module.exports = {
   },
   APP_NAME: 'Chat Room',
   SERVER_URL: 'http://magic.org',
+  USER_EMAIL_CONFIRMATION_KEY: {
+    EXPIRATION: 60000 * 60 * 24, // 24 hours
+    LENGTH: 25,
+  },
 };

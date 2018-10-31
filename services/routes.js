@@ -45,6 +45,12 @@ module.exports = {
         filters: ['users.doesEmailExist'],
         noAuth: true,
       },
+      confirmEmail: {
+        route: ['/confirm_email/:key', 'GET'],
+        validators: ['users.confirmEmail'],
+        filters: ['users.confirmEmailKeyExpired'],
+        noAuth: true,
+      },
     },
   },
 };

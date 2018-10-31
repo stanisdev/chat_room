@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const randomString = require('randomstring');
+const config = require(process.env.CONFIG_PATH);
 
 module.exports = (sequelize, DataTypes) => {
   const { models } = sequelize;
@@ -73,7 +74,11 @@ module.exports = (sequelize, DataTypes) => {
     const hash = await bcrypt.hash(password + salt, 10);
 
     return new Promise((resolve, reject) => {
-      const key = randomString.generate(25);
+      const expired =
+        new Date().getTime() + config.USER_EMAIL_CONFIRMATION_KEY.EXPIRATION;
+      const key = randomString.generate(
+        config.USER_EMAIL_CONFIRMATION_KEY.LENGTH
+      );
       sequelize
         .transaction(function(t) {
           return User.create(
@@ -92,6 +97,7 @@ module.exports = (sequelize, DataTypes) => {
               {
                 user_id: user.get('id'),
                 key,
+                expired,
               },
               { transaction: t }
             );
@@ -102,6 +108,31 @@ module.exports = (sequelize, DataTypes) => {
         })
         .catch(reject);
     });
+  };
+
+  User.confirmEmail = async function(params) {
+    const {keyId, userId} = params;
+    return sequelize
+      .transaction(function(t) {
+        return User.update(
+          {
+            status: 1,
+          },
+          {
+            where: { id: userId },
+            limit: 1,
+            transaction: t,
+          }
+        ).then(user => {
+          return models.UserKey.destroy(
+            {
+              where: { id: keyId },
+              limit: 1,
+              transaction: t
+            },
+          );
+        });
+      })
   };
 
   return User;

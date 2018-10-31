@@ -1,6 +1,8 @@
 <html>
   <head>{{ appName }}</head>
   <body>
-    <h1>Click on the <a target="_blank" href="{{ serverUrl }}/user/confirm/{{ key }}">link</a> to confirm your email.</h1>
+    <!-- It's necessary to discuss with the frontend-developer the URL format for his application, 
+      by passing on which the key can be extracted and transferred to the server to activate the account. -->>
+    <h1>Click on the <a target="_blank" href="{{ serverUrl }}/users/confirm_email/{{ key }}">link</a> to confirm your email.</h1>
   </body>
 </html>

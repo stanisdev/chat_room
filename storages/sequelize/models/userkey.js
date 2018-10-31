@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      expired: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       timestamps: false,
@@ -20,10 +24,18 @@ module.exports = (sequelize, DataTypes) => {
 
   UserKey.associate = function(models) {};
 
-  UserKey.addUserRegistrationKey = function(userId) {
-    return UserKey.create({
-      user_id: userId,
-      key: randomString.generate(25),
+  UserKey.findOneByParams = function(params) {
+    return UserKey.findOne({
+      where: params,
+      limit: 1,
+      raw: true,
+    });
+  };
+
+  UserKey.removeOneByParams = function(params) {
+    return UserKey.destroy({
+      where: params,
+      limit: 1,
     });
   };
 
