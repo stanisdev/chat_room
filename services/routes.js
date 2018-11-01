@@ -37,6 +37,7 @@ module.exports = {
     handlers: {
       login: {
         route: ['/login', 'POST'],
+        validators: ['users.login'],
         noAuth: true,
       },
       register: {

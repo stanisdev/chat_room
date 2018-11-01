@@ -36,13 +36,28 @@ module.exports = {
     next();
   },
 
-  async confirmEmail(req, res, next) {
+  confirmEmail(req, res, next) {
     const schema = Joi.object().keys({
       key: Joi.string()
         .length(config.USER_EMAIL_CONFIRMATION_KEY.LENGTH)
         .required(),
     });
     const result = Joi.validate(req.params, schema);
+    if (result.error !== null) {
+      return this.fail(res);
+    }
+    next();
+  },
+
+  login(req, res, next) {
+    const schema = Joi.object().keys({
+      email: Joi.string()
+        .email()
+        .max(60)
+        .required(),
+      password: Joi.string().required(),
+    });
+    const result = Joi.validate(req.body, schema);
     if (result.error !== null) {
       return this.fail(res);
     }

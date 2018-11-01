@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
   User.findOneByParams = function(params) {
     return User.findOne({
       where: params,
-      attributes: ['id', 'name', 'email', 'status', 'blocked'],
+      attributes: ['id', 'name', 'email', 'status', 'blocked', 'password', 'salt', 'personal_key'],
       limit: 1,
       raw: true,
     });
@@ -133,6 +133,20 @@ module.exports = (sequelize, DataTypes) => {
           );
         });
       })
+  };
+
+  User.checkPassword = function(params) {
+    const {password, hash, salt} = params;
+    return bcrypt.compare(password + salt, hash);
+  };
+
+  User.updateLastLogin = function(userId) {
+    return User.update({
+      last_login: new Date(),
+    }, {
+      where: { id: userId },
+      limit: 1,
+    });
   };
 
   return User;

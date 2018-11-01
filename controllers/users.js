@@ -1,6 +1,36 @@
 class Users {
-  login(req, res, next) {
-    res.json({});
+  async login(req, res, next) {
+    const {email, password} = req.body;
+    const {codes} = this;
+    const fail = (code) => {
+      res.json({
+        codes: [code],
+      });
+    };
+    const user = await this.db.User.findOneByParams({ email });
+    if (!(user instanceof Object)) {
+      return fail(codes.WRONG_EMAIL_OR_PASSWORD);
+    }
+    if (user.status < 1) {
+      return fail(codes.EMAIL_NOT_CONFIRMED);
+    } else if (Boolean(user.blocked)) {
+      return fail(codes.USER_WAS_BLOCKED);
+    }
+    const params = {
+      password,
+      hash: user.password,
+      salt: user.salt,
+    };
+    const isValid = await this.db.User.checkPassword(params);
+    if (!isValid) {
+      return fail(codes.WRONG_EMAIL_OR_PASSWORD);
+    }
+    await this.db.User.updateLastLogin(user.id);
+    const token = await this.services.jwt.sign({
+      id: user.id,
+      personalKey: user.personal_key,
+    });
+    res.json({token});
   }
 
   async register(req, res, next) {

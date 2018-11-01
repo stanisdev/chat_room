@@ -4,7 +4,7 @@ const config = require(process.env.CONFIG_PATH);
 const { SERVICES_PATH, CODES_PATH, MAILER } = config;
 const codes = require(CODES_PATH);
 const db = require(config.STORAGES_PATH).getConnection();
-const { routes, wrapper, errors, other, logger } = require(SERVICES_PATH);
+const { routes, wrapper, errors, other, logger, jwt } = require(SERVICES_PATH);
 const mailer = require(MAILER.PATH);
 const _filters = require(config.FILTERS_PATH);
 const _validators = require(config.VALIDATORS_PATH);
@@ -15,6 +15,7 @@ const context = {
   services: {
     ...other,
     mailer,
+    jwt,
   },
   codes,
   config,
