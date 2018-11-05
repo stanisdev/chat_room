@@ -53,10 +53,11 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Message);
   };
 
-  User.findOneByParams = function(params) {
+  User.findOneByParams = function(params, attributes = []) {
+    attributes = ['id', 'name', 'email', 'status', 'blocked'].concat(attributes);
     return User.findOne({
       where: params,
-      attributes: ['id', 'name', 'email', 'status', 'blocked', 'password', 'salt', 'personal_key'],
+      attributes,
       limit: 1,
       raw: true,
     });

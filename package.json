@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/www",
-    "start:dev": "NODE_ENV=development STORAGE_DIRECTION=sequelize nodemon bin/www",
+    "start:dev": "NODE_ENV=development STORAGE_DIRECTION=mongoose nodemon bin/www",
     "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ *.js",
     "prettier": "./node_modules/.bin/prettier --trailing-comma=es5 --single-quote --write \"**/*.js\""
   },
@@ -41,6 +41,7 @@
     "joi": "14.0.0",
     "jsonwebtoken": "8.3.0",
     "lodash": "4.17.11",
+    "mongoose": "5.3.9",
     "morgan": "1.9.1",
     "mysql2": "1.6.1",
     "nodemailer": "4.6.8",
@@ -52,10 +53,10 @@
     "socket.io": "2.1.1"
   },
   "devDependencies": {
-    "commitizen": "^3.0.4",
-    "eslint": "^5.7.0",
-    "eslint-config-google": "^0.11.0",
-    "nodemon": "^1.18.4",
+    "commitizen": "3.0.4",
+    "eslint": "5.7.0",
+    "eslint-config-google": "0.11.0",
+    "nodemon": "1.18.4",
     "prettier": "1.14.3"
   }
 }

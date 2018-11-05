@@ -7,7 +7,8 @@ class Users {
         codes: [code],
       });
     };
-    const user = await this.db.User.findOneByParams({ email });
+    const attributes = ['password', 'salt', 'personal_key'];
+    const user = await this.db.User.findOneByParams({ email }, attributes);
     if (!(user instanceof Object)) {
       return fail(codes.WRONG_EMAIL_OR_PASSWORD);
     }

@@ -1,0 +1,26 @@
+{
+  "DEVELOPMENT": {
+    "HOST": "localhost",
+    "DB": "chat_room",
+    "USER": "",
+    "PASSWORD": "",
+    "PORT": "",
+    "IS_LOCAL": true
+  },
+  "TEST": {
+    "HOST": "",
+    "DB": "",
+    "USER": "",
+    "PASSWORD": "",
+    "PORT": "",
+    "IS_LOCAL": true
+  },
+  "PRODUCTION": {
+    "HOST": "",
+    "DB": "",
+    "USER": "",
+    "PASSWORD": "",
+    "PORT": "",
+    "IS_LOCAL": true
+  }
+}

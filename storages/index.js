@@ -17,6 +17,11 @@ module.exports = {
         db = require(storagePath);
         await db.sequelize.authenticate();
         break;
+      case 'mongoose':
+        mongoose = require(storagePath);
+        await mongoose.connect();
+        db = require('mongoose');
+        break;
     }
     return true;
   },
