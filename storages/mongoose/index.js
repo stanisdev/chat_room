@@ -32,6 +32,7 @@ const mongooseConnection = {
       require(model);
     });
     mongoose.set('debug', true);
+    require(path.join(__dirname, 'methods'));
     return true;
   },
   /**

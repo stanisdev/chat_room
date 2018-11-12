@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  chats: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Chat',
+    },
+  ],
   last_login: {
     type: Date,
   },
@@ -61,17 +67,18 @@ userSchema.virtual('id').get(function() {
 });
 
 statics.findOneByParams = function(params, attributes = []) {
-  attributes = ['id', 'name', 'email', 'status', 'blocked']
+  attributes = ['_id', 'name', 'email', 'status', 'blocked']
     .concat(attributes)
     .join(' ');
-  return this.findOne(params).select(attributes);
+  return this.findOne(mongoose.beautifyId(params)).select(attributes);
 };
 
 statics.createNew = async function(params) {
   const { email, name, password } = params;
   const salt = randomString.generate(8);
   const hash = await bcrypt.hash(password + salt, 10);
-  const expired = new Date().getTime() + config.USER_EMAIL_CONFIRMATION_KEY.EXPIRATION;
+  const expired =
+    new Date().getTime() + config.USER_EMAIL_CONFIRMATION_KEY.EXPIRATION;
   const key = randomString.generate(config.USER_EMAIL_CONFIRMATION_KEY.LENGTH);
 
   const user = new this({
@@ -83,8 +90,8 @@ statics.createNew = async function(params) {
   });
   await user.save();
 
-  const userKeyModel = this.model('UserKey');
-  const userKey = new userKeyModel({
+  const UserKey = this.model('UserKey');
+  const userKey = new UserKey({
     user_id: user.id,
     key,
     expired,
@@ -101,12 +108,30 @@ statics.checkPassword = function(params) {
 statics.updateLastLogin = function(userId) {
   return this.updateOne(
     { _id: userId },
-    { $set:
-      {
+    {
+      $set: {
         last_login: new Date(),
       },
-    },
+    }
   );
+};
+
+statics.confirmEmail = function(params) {
+  const { keyId, userId } = params;
+  const UserKey = this.model('UserKey');
+  return Promise.all([
+    this.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          status: 1,
+        },
+      }
+    ),
+    UserKey.deleteOne({
+      _id: keyId,
+    }),
+  ]);
 };
 
 userSchema.statics = statics;

@@ -16,4 +16,9 @@ const userKeySchema = new mongoose.Schema({
   },
 });
 
+statics.findOneByParams = function(params) {
+  return this.findOne(params);
+};
+
+userKeySchema.statics = statics;
 mongoose.model('UserKey', userKeySchema);
