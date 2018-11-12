@@ -8,7 +8,8 @@
     "start": "node bin/www",
     "start:dev": "NODE_ENV=development STORAGE_DIRECTION=mongoose nodemon bin/www",
     "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ *.js",
-    "prettier": "./node_modules/.bin/prettier --trailing-comma=es5 --single-quote --write \"**/*.js\""
+    "prettier": "./node_modules/.bin/prettier --trailing-comma=es5 --single-quote --write \"**/*.js\"",
+    "seed:sequelize": "./node_modules/.bin/sequelize db:seed:all"
   },
   "repository": {
     "type": "git",

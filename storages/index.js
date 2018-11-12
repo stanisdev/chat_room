@@ -20,7 +20,14 @@ module.exports = {
       case 'mongoose':
         mongoose = require(storagePath);
         await mongoose.connect();
-        db = require('mongoose');
+
+        db = new Proxy({
+          db: require('mongoose'),
+        }, {
+          get: function(target, propName) {
+            return target.db.model(propName);
+          },
+        });
         break;
     }
     return true;

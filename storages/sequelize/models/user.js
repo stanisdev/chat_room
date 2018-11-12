@@ -31,12 +31,12 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.TINYINT,
         allowNull: false,
-        deafult: 0, // 0 - not activated, 1 - activated
+        deafultValue: 0, // 0 - not activated, 1 - activated
       },
       blocked: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defult: false,
+        deafultValue: false,
       },
       last_login: {
         type: DataTypes.DATE,
