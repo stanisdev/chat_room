@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const randomString = require('randomstring');
+const config = require(process.env.CONFIG_PATH);
+const statics = {};
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -32,23 +36,78 @@ const userSchema = new mongoose.Schema({
   status: {
     type: Number,
     required: true,
-    deafult: 0, // 0 - not activated, 1 - activated
+    default: 0, // 0 - not activated, 1 - activated
   },
   blocked: {
     type: Boolean,
     required: true,
-    deafult: false,
+    default: false,
   },
   last_login: {
     type: Date,
   },
+  created_at: {
+    type: Date,
+    default: new Date(),
+  },
+  updated_at: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
-userSchema.statics.findOneByParams = function(params, attributes = []) {
-  return this.findOne(params);
+userSchema.virtual('id').get(function() {
+  return this._id;
+});
+
+statics.findOneByParams = function(params, attributes = []) {
+  attributes = ['id', 'name', 'email', 'status', 'blocked']
+    .concat(attributes)
+    .join(' ');
+  return this.findOne(params).select(attributes);
 };
 
-userSchema.statics.createNew = function(params) {
+statics.createNew = async function(params) {
+  const { email, name, password } = params;
+  const salt = randomString.generate(8);
+  const hash = await bcrypt.hash(password + salt, 10);
+  const expired = new Date().getTime() + config.USER_EMAIL_CONFIRMATION_KEY.EXPIRATION;
+  const key = randomString.generate(config.USER_EMAIL_CONFIRMATION_KEY.LENGTH);
+
+  const user = new this({
+    name,
+    email,
+    password: hash,
+    salt,
+    personal_key: randomString.generate(7),
+  });
+  await user.save();
+
+  const userKeyModel = this.model('UserKey');
+  const userKey = new userKeyModel({
+    user_id: user.id,
+    key,
+    expired,
+  });
+  await userKey.save();
+  return true;
 };
 
+statics.checkPassword = function(params) {
+  const { password, hash, salt } = params;
+  return bcrypt.compare(password + salt, hash);
+};
+
+statics.updateLastLogin = function(userId) {
+  return this.updateOne(
+    { _id: userId },
+    { $set:
+      {
+        last_login: new Date(),
+      },
+    },
+  );
+};
+
+userSchema.statics = statics;
 mongoose.model('User', userSchema);

@@ -21,13 +21,16 @@ module.exports = {
         mongoose = require(storagePath);
         await mongoose.connect();
 
-        db = new Proxy({
-          db: require('mongoose'),
-        }, {
-          get: function(target, propName) {
-            return target.db.model(propName);
+        db = new Proxy(
+          {
+            db: require('mongoose'),
           },
-        });
+          {
+            get: function(target, propName) {
+              return target.db.model(propName);
+            },
+          }
+        );
         break;
     }
     return true;

@@ -7,8 +7,9 @@ module.exports = {
           id: 1,
           name: 'Mary',
           email: 'mary@gmail.com',
-          password: 'xxxx',
-          salt: 'mi3IQqKJ',
+          password:
+            '$2b$10$BqsBFzGky7rE1FCCy2vRRe3hEdBBgOWqKwSMx2oFz9IzRxZ6U5tOi', // nice_password
+          salt: '4tFvVntS',
           personal_key: 'arl8MCn',
           status: 1,
           blocked: false,
@@ -20,8 +21,9 @@ module.exports = {
           id: 2,
           name: 'Bill',
           email: 'bill@gmail.com',
-          password: 'xxxx',
-          salt: 'zSNWpDtf',
+          password:
+            '$2b$10$BqsBFzGky7rE1FCCy2vRRe3hEdBBgOWqKwSMx2oFz9IzRxZ6U5tOi', // nice_password
+          salt: '4tFvVntS',
           personal_key: 'dC0vUb6',
           status: 1,
           blocked: false,

@@ -54,7 +54,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.findOneByParams = function(params, attributes = []) {
-    attributes = ['id', 'name', 'email', 'status', 'blocked'].concat(attributes);
+    attributes = ['id', 'name', 'email', 'status', 'blocked'].concat(
+      attributes
+    );
     return User.findOne({
       where: params,
       attributes,
@@ -112,42 +114,42 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.confirmEmail = async function(params) {
-    const {keyId, userId} = params;
-    return sequelize
-      .transaction(function(t) {
-        return User.update(
-          {
-            status: 1,
-          },
-          {
-            where: { id: userId },
-            limit: 1,
-            transaction: t,
-          }
-        ).then(user => {
-          return models.UserKey.destroy(
-            {
-              where: { id: keyId },
-              limit: 1,
-              transaction: t
-            },
-          );
+    const { keyId, userId } = params;
+    return sequelize.transaction(function(t) {
+      return User.update(
+        {
+          status: 1,
+        },
+        {
+          where: { id: userId },
+          limit: 1,
+          transaction: t,
+        }
+      ).then(user => {
+        return models.UserKey.destroy({
+          where: { id: keyId },
+          limit: 1,
+          transaction: t,
         });
-      })
+      });
+    });
   };
 
   User.checkPassword = function(params) {
-    const {password, hash, salt} = params;
+    const { password, hash, salt } = params;
     return bcrypt.compare(password + salt, hash);
   };
 
   User.updateLastLogin = function(userId) {
-    return User.update({
-      last_login: new Date(),
-    }, {
-      where: { id: userId },
-      limit: 1,
-    });
+    return User.update(
+      {
+        last_login: new Date(),
+      },
+      {
+        where: { id: userId },
+        limit: 1,
+      }
+    );
   };
 
   return User;

@@ -1,8 +1,8 @@
 class Users {
   async login(req, res, next) {
-    const {email, password} = req.body;
-    const {codes} = this;
-    const fail = (code) => {
+    const { email, password } = req.body;
+    const { codes } = this;
+    const fail = code => {
       res.json({
         codes: [code],
       });
@@ -31,7 +31,7 @@ class Users {
       id: user.id,
       personalKey: user.personal_key,
     });
-    res.json({token});
+    res.json({ token });
   }
 
   async register(req, res, next) {
