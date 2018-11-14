@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
       },
       key: {
-        //@TODO: Should be set as unique
+        // @TODO: Should be set as unique
         type: Sequelize.STRING,
         allowNull: true,
       },

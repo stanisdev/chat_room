@@ -1,4 +1,19 @@
+/**
+ * This is the class to provide chats
+ */
 class Chats {
+  /**
+   * Get list of chats of user
+   *
+   * Optional Query params:
+   *  limit<Number>,
+   *  offset<Number>
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
   async getAll(req, res, next) {
     const limiter = this.services.limiter(req);
     const params = {
@@ -9,6 +24,18 @@ class Chats {
     res.json(chats);
   }
 
+  /**
+   * Creating new Chat
+   *
+   * Expected POST fields:
+   *  type<Number>,
+   *  members<Array>
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
   async create(req, res, next) {
     const { type, members } = req.body;
     const userId = req.user.id;
@@ -26,6 +53,18 @@ class Chats {
     res.json(chat);
   }
 
+  /**
+   * Add user to chat
+   *
+   * Expected URL params:
+   *  chat_id<Number>,
+   *  user_id<Number>
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
   async addMember(req, res, next) {
     const params = {
       chatId: req.params.chat_id,

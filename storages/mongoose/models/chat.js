@@ -65,7 +65,7 @@ statics.createNew = async function(params) {
     tasks.push(
       this.model('User').updateOne(
         { _id: member.user },
-        { $push: { chats: _id } },
+        { $push: { chats: _id } }
       )
     );
   }

@@ -5,14 +5,14 @@ module.exports = {
       {
         require: {
           FunctionDeclaration: true,
-          MethodDefinition: false,
-          ClassDeclaration: false,
-          ArrowFunctionExpression: false,
-          FunctionExpression: false,
+          MethodDefinition: true,
+          ClassDeclaration: true,
+          ArrowFunctionExpression: true,
+          FunctionExpression: true,
         },
       },
     ],
-    'max-len': [1, 90],
+    'max-len': [1, 100],
     'new-cap': [
       'error',
       {
@@ -20,6 +20,9 @@ module.exports = {
         properties: false,
       },
     ],
+    indent: 0,
+    'object-curly-spacing': [2, 'always'],
+    'arrow-parens': ['error', 'as-needed'],
   },
   extends: 'google',
   parserOptions: {

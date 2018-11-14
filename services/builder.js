@@ -55,7 +55,7 @@ const builder = {
         }
         const args = [url];
         if (!noAuth) {
-          args.push(_filters.auth);
+          args.push(wrapper(_filters.auth));
         }
         if (Array.isArray(validators)) {
           // Validators

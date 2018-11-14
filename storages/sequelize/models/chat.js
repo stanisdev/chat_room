@@ -111,7 +111,8 @@ module.exports = (sequelize, DataTypes) => {
       offset,
     });
     const query = `
-    SELECT m.id, m.chat_id, m.content, m.type, m.created_at, ms.\`status\`, u.\`name\` \`user.name\`, u.id \`user.id\`
+    SELECT m.id, m.chat_id, m.content, m.type, m.created_at, 
+      ms.\`status\`, u.\`name\` \`user.name\`, u.id \`user.id\`
     FROM MessageStatuses ms 
     INNER JOIN Messages m ON ms.message_id = m.id
     INNER JOIN Users u ON m.user_id = u.id
@@ -186,7 +187,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Chat.addMember = async function(params) {
-    //@TODO: Create system message "User added to chat"
+    // @TODO: Create system message "User added to chat"
     const { chatId, userId } = params;
     sequelize.transaction(function(t) {
       return models.ChatMember.create(

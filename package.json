@@ -4,10 +4,10 @@
   "description": "Messanger",
   "main": "bin/www",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node tests/init.js && ./node_modules/.bin/mocha tests/controllers",
     "start": "node bin/www",
     "start:dev": "NODE_ENV=development STORAGE_DIRECTION=mongoose nodemon bin/www",
-    "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ *.js",
+    "eslint": "./node_modules/.bin/eslint controllers/ services/ filters/ config/ storages/ validators/ tests/ *.js",
     "prettier": "./node_modules/.bin/prettier --trailing-comma=es5 --single-quote --write \"**/*.js\"",
     "seed:sequelize": "./node_modules/.bin/sequelize db:seed:all",
     "seed:mongoose": "SEED=1 node ./storages/mongoose"
@@ -55,9 +55,13 @@
     "socket.io": "2.1.1"
   },
   "devDependencies": {
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "chai-http": "4.2.0",
     "commitizen": "3.0.4",
     "eslint": "5.7.0",
     "eslint-config-google": "0.11.0",
+    "mocha": "5.2.0",
     "nodemon": "1.18.4",
     "prettier": "1.14.3"
   }

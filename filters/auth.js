@@ -1,12 +1,12 @@
 const status = require('http-status');
 const config = require(process.env.CONFIG_PATH);
-const { jwt, wrapper } = require(config.SERVICES_PATH);
+const { jwt } = require(config.SERVICES_PATH);
 const db = require(config.STORAGES_PATH).getConnection();
 const fail = res => {
   res.status(status.UNAUTHORIZED).json({});
 };
 
-module.exports = wrapper(async (req, res, next) => {
+module.exports = async (req, res, next) => {
   const header = req.headers.authorization;
   if (typeof header !== 'string') {
     return fail(res);
@@ -32,4 +32,4 @@ module.exports = wrapper(async (req, res, next) => {
   }
   req.user = user;
   next();
-});
+};

@@ -1,5 +1,3 @@
-const randomString = require('randomstring');
-
 module.exports = (sequelize, DataTypes) => {
   const UserKey = sequelize.define(
     'UserKey',

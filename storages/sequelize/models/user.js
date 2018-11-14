@@ -45,6 +45,11 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
+  /**
+   * To associate User model with other models
+   *
+   * @param {Object} models
+   */
   User.associate = function(models) {
     User.belongsToMany(models.Chat, {
       through: models.ChatMember,
@@ -53,6 +58,14 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Message);
   };
 
+  /**
+   * Find one user by filter parameters
+   *
+   * @async
+   * @param {Object} params
+   * @param {Array} attributes=[]
+   * @return {Promise<Object>}
+   */
   User.findOneByParams = function(params, attributes = []) {
     attributes = ['id', 'name', 'email', 'status', 'blocked'].concat(
       attributes
@@ -65,12 +78,26 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * To count amount of user by filter parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Number>}
+   */
   User.countByParams = function(params) {
     return User.count({
       where: params,
     });
   };
 
+  /**
+   * Creating new user
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   User.createNew = async function(params) {
     const { email, name, password } = params;
     const salt = randomString.generate(8);
@@ -113,7 +140,14 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  User.confirmEmail = async function(params) {
+  /**
+   * Confirm user's email
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise}
+   */
+  User.confirmEmail = function(params) {
     const { keyId, userId } = params;
     return sequelize.transaction(function(t) {
       return User.update(
@@ -135,11 +169,25 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * Checking password correctness within bcrypt
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Boolean>}
+   */
   User.checkPassword = function(params) {
     const { password, hash, salt } = params;
     return bcrypt.compare(password + salt, hash);
   };
 
+  /**
+   * To log time when user logged in
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   User.updateLastLogin = function(userId) {
     return User.update(
       {
