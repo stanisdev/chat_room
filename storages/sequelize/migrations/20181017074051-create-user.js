@@ -29,7 +29,7 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: Sequelize.TINYINT,
+        type: Sequelize.SMALLINT,
         allowNull: false,
         defaultValue: 0, // 0 - not activated, 1 - activated
       },

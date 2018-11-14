@@ -28,7 +28,7 @@ module.exports = {
         allowNull: false,
       },
       role: {
-        type: Sequelize.TINYINT, // 0 - common member, 1 - administrator
+        type: Sequelize.SMALLINT, // 0 - common member, 1 - administrator
       },
     });
   },

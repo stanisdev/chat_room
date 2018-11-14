@@ -28,7 +28,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.TINYINT,
+        type: Sequelize.SMALLINT,
         defaultValue: 0, // 0 - text/plain
         allowNull: false,
       },

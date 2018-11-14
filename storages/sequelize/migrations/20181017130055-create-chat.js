@@ -19,7 +19,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.TINYINT,
+        type: Sequelize.SMALLINT,
         allowNull: false,
         defaultValue: 0, // 0 - common chat, 1 - group chat
       },

@@ -28,7 +28,7 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: Sequelize.TINYINT,
+        type: Sequelize.SMALLINT,
         defaultValue: 0, // 0 - not delivired, 1 - delivired, 2 - has been readed
         allowNull: false,
       },
