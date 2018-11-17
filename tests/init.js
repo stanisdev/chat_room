@@ -23,18 +23,15 @@ const client = new Client(credentials);
     testDatabaseName,
     credentials.username,
     credentials.password,
-    credentials,
+    credentials
   );
   const umzug = new Umzug({
     storage: 'sequelize',
     storageOptions: {
-      sequelize: sequelize
+      sequelize: sequelize,
     },
     migrations: {
-      params: [
-        sequelize.getQueryInterface(),
-        Sequelize
-      ],
+      params: [sequelize.getQueryInterface(), Sequelize],
       path: migrationPath,
     },
   });
@@ -42,8 +39,7 @@ const client = new Client(credentials);
 
   console.log('The test database has been created and migrations executed');
   process.exit();
-})()
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+})().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

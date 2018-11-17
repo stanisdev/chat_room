@@ -6,8 +6,8 @@ module.exports = {
     host: '127.0.0.1',
     dialect: 'postgres',
     define: {
-      underscored: true
-    }
+      underscored: true,
+    },
   },
   test: {
     username: 'chat_room_test_user',
@@ -15,15 +15,16 @@ module.exports = {
     database: process.env.CI_DB_NAME || 'chat_room_test',
     host: '127.0.0.1',
     dialect: 'postgres',
+    logging: false,
     define: {
-      underscored: true
-    }
+      underscored: true,
+    },
   },
   production: {
     username: 'root',
     password: null,
     database: 'database_production',
     host: '127.0.0.1',
-    dialect: 'postgres'
-  }
+    dialect: 'postgres',
+  },
 };

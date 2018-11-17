@@ -8,19 +8,16 @@ const log = require(config.LOGGER_PATH)(__filename);
 process.env.CONFIG_PATH = configPath;
 process.env.LOGGER_PATH = config.LOGGER_PATH;
 
-const storages = require(config.STORAGES_PATH);
-storages.authenticate()
-  .then(() => {
-    log.info('Database connection has been established successfully');
-    const app = require(config.APP_FILE);
-    const port = parseInt(process.env.PORT, 10) || config.PORT_DEFAULT;
-    const server = http.createServer(app);
-
-    server.listen(port, () => {
-      log.info(`API listening on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    log.error('App cannot be started');
-    console.log(err);
+(async () => {
+  const app = await require(config.APP_FILE);
+  const port = parseInt(process.env.PORT, 10) || config.PORT_DEFAULT;
+  const server = http.createServer(app);
+  server.listen(port, () => {
+    log.info(`API listening on port ${port}`);
   });
+})()
+.catch((err) => {
+  log.error('App cannot be started');
+  console.log(err);
+  process.exit(1);
+});

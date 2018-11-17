@@ -11,8 +11,9 @@ process.env.CONFIG_PATH = configPath;
 process.env.LOGGER_PATH = config.LOGGER_PATH;
 process.env.STORAGE_DIRECTION = 'sequelize';
 
+const storage = require(config.STORAGES_PATH);
 const server = require(appFilePath);
 chai.use(require('chai-as-promised'));
 chai.use(chaiHttp);
 
-module.exports = { chai, server, expect };
+module.exports = { chai, server, expect, storage };
