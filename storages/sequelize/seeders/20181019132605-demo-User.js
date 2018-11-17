@@ -31,6 +31,20 @@ module.exports = {
           created_at: new Date(),
           updated_at: new Date(),
         },
+        {
+          id: 3,
+          name: 'Robert',
+          email: 'robert@gmail.com',
+          password:
+            '$2b$10$BqsBFzGky7rE1FCCy2vRRe3hEdBBgOWqKwSMx2oFz9IzRxZ6U5tOi', // nice_password
+          salt: '4tFvVntS',
+          personal_key: 'dC0vUb6',
+          status: 0, // Not confirmed email
+          blocked: false,
+          last_login: new Date(),
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
       ],
       {}
     );
