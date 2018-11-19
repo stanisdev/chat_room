@@ -1,4 +1,19 @@
+/**
+ * This is the class to provide users actions
+ */
 class Users {
+  /**
+   * Log in to system
+   *
+   * Expected POST fields:
+   *  email<String>,
+   *  password<String>
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
   async login(req, res, next) {
     const { email, password } = req.body;
     const { codes } = this;
@@ -34,6 +49,19 @@ class Users {
     res.json({ token });
   }
 
+  /**
+   * Register new user
+   *
+   * Expected POST fields:
+   *  email<String>,
+   *  password<String>,
+   *  name<String>
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
   async register(req, res, next) {
     const { key } = await this.db.User.createNew(req.body);
     try {
@@ -52,6 +80,17 @@ class Users {
     res.json({});
   }
 
+  /**
+   * Confirm user's profile with key transmitted by email
+   *
+   * Expected URL params:
+   *  key<String>
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
   async confirmEmail(req, res, next) {
     const params = {
       keyId: req.userKey.id,

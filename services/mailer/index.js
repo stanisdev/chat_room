@@ -9,6 +9,10 @@ const readFile = util.promisify(fs.readFile);
 module.exports = {
   send(params) {
     return new Promise((resolve, reject) => {
+      if (process.env.NODE_ENV === 'test') {
+        // @TODO: Find another solution
+        return resolve();
+      }
       const { email, data, type } = params;
 
       const transporter = nodemailer.createTransport({

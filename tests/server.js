@@ -16,4 +16,4 @@ const server = require(appFilePath);
 chai.use(require('chai-as-promised'));
 chai.use(chaiHttp);
 
-module.exports = { chai, server, expect, storage };
+module.exports = { chai, server, expect, storage, config };
