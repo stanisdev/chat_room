@@ -12,11 +12,14 @@ process.env.LOGGER_PATH = config.LOGGER_PATH;
   const app = await require(config.APP_FILE);
   const port = parseInt(process.env.PORT, 10) || config.PORT_DEFAULT;
   const server = http.createServer(app);
+  const Websocket = require(path.join(config.SERVICES_PATH, 'websocket'));
+
   server.listen(port, () => {
     log.info(`API listening on port ${port}`);
   });
-})()
-.catch((err) => {
+  const websocket = new Websocket(server);
+  websocket.start();
+})().catch(err => {
   log.error('App cannot be started');
   console.log(err);
   process.exit(1);

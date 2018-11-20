@@ -54,8 +54,8 @@
     "randomstring": "1.1.5",
     "sequelize": "4.39.1",
     "sequelize-cli": "5.1.0",
-    "socket.io": "2.1.1",
-    "umzug": "2.1.0"
+    "umzug": "2.1.0",
+    "websocket": "1.0.28"
   },
   "devDependencies": {
     "chai": "4.2.0",

@@ -15,19 +15,19 @@ module.exports = async (req, res, next) => {
   if (bearer !== 'Bearer' || typeof token !== 'string' || token.length < 1) {
     return fail(res);
   }
-  let userData;
+  let user;
   try {
-    userData = await jwt.verify(token);
+    const { id, personalKey } = await jwt.verify(token);
+    user = await db.User.findOneByParams({
+      id,
+      personal_key: personalKey,
+      status: 1,
+      blocked: false,
+    });
+    if (!(user instanceof Object)) {
+      throw new Error('Wrong token or user not found');
+    }
   } catch (err) {
-    return fail(res);
-  }
-  const { id } = userData;
-  const user = await db.User.findOneByParams({
-    id,
-    personal_key: userData.personalKey,
-    blocked: false,
-  });
-  if (!(user instanceof Object)) {
     return fail(res);
   }
   req.user = user;

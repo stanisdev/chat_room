@@ -111,16 +111,16 @@ module.exports = (sequelize, DataTypes) => {
       offset,
     });
     const query = `
-    SELECT m.id, m.chat_id, m.content, m.type, m.created_at, 
-      ms.\`status\`, u.\`name\` \`user.name\`, u.id \`user.id\`
-    FROM MessageStatuses ms 
-    INNER JOIN Messages m ON ms.message_id = m.id
-    INNER JOIN Users u ON m.user_id = u.id
-    WHERE ms.id IN (
-      SELECT MAX(id) as id 
-      FROM MessageStatuses 
-      WHERE user_id = ? AND chat_id IN (?)
-      GROUP BY chat_id
+    SELECT "m"."id", "m"."chat_id", "m"."content", "m"."type", "m"."created_at",
+      "ms"."status", "u"."name" AS "user.name", "u"."id" AS "user.id"
+    FROM "public"."MessageStatuses" AS ms
+    INNER JOIN "public"."Messages" AS m ON ms.message_id = m.id
+    INNER JOIN "public"."Users" AS u ON m.user_id = u.id
+    WHERE "ms"."id" IN (
+      SELECT MAX(id) AS id 
+      FROM "public"."MessageStatuses"
+      WHERE "user_id" = ? AND "chat_id" IN (?)
+      GROUP BY "chat_id"
     )`;
     const chatIds = memberships.map(membership => membership.get('chat_id'));
     const tasks = [];

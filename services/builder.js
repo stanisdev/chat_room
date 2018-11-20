@@ -6,7 +6,6 @@ const codes = require(CODES_PATH);
 const db = require(config.STORAGES_PATH);
 const { routes, wrapper, errors, other, logger, jwt } = require(SERVICES_PATH);
 const mailer = require(MAILER.PATH);
-const _filters = require(config.FILTERS_PATH);
 const _validators = require(config.VALIDATORS_PATH);
 const _ = require('lodash');
 const status = require('http-status');
@@ -32,6 +31,7 @@ const builder = {
       'Database connection has been established successfully'
     );
     context.db = db.getConnection();
+    const _filters = require(config.FILTERS_PATH);
 
     controllers.forEach(controller => {
       const controllerName = path.basename(controller).slice(0, -3);
