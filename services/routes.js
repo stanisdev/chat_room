@@ -52,6 +52,9 @@ module.exports = {
         filters: ['users.confirmEmailKeyExpired'],
         noAuth: true,
       },
+      profile: {
+        route: ['/profile', 'GET'],
+      },
     },
   },
 };

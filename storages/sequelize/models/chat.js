@@ -122,7 +122,16 @@ module.exports = (sequelize, DataTypes) => {
       WHERE "user_id" = ? AND "chat_id" IN (?)
       GROUP BY "chat_id"
     )`;
-    const chatIds = memberships.map(membership => membership.get('chat_id'));
+    const chatIds = [];
+    const dialogIds = [];
+    memberships.forEach(membership => {
+      // Extract  list of chats and dialogs
+      const chatId = membership.get('chat_id');
+      chatIds.push(chatId);
+      if (membership.Chat.get('type') === 0) {
+        dialogIds.push(chatId);
+      }
+    });
     const tasks = [];
 
     tasks.push(
@@ -150,8 +159,29 @@ module.exports = (sequelize, DataTypes) => {
         raw: true,
       })
     );
+    if (dialogIds.length > 0) {
+      tasks.push(
+        models.ChatMember.findAll({
+          where: {
+            chat_id: dialogIds,
+            user_id: {
+              [Op.ne]: userId,
+            },
+          },
+          include: [
+            {
+              model: models.User,
+              attributes: ['name'],
+            },
+          ],
+          attributes: ['chat_id', 'user_id'],
+        })
+      );
+    }
 
-    const [lastMessages, unreadMessages] = await Promise.all(tasks);
+    const [lastMessages, unreadMessages, interlocutors] = await Promise.all(
+      tasks
+    );
     const chats = memberships.map(membership => {
       const chat = membership.Chat.get({
         plain: true,
@@ -181,6 +211,17 @@ module.exports = (sequelize, DataTypes) => {
       );
       chat.unread_messages =
         _unreadMessages instanceof Object ? _unreadMessages.totalCount : 0;
+      if (chat.type === 0) {
+        // Define chat name according interlocutor name
+        const interlocutor = interlocutors.find(
+          interlocutor => interlocutor.get('chat_id') === chat.id
+        );
+        let chatName = '';
+        if (interlocutor instanceof Object) {
+          chatName = interlocutor.User.get('name');
+        }
+        chat.name = chatName;
+      }
       return chat;
     });
     return chats;

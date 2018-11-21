@@ -99,6 +99,21 @@ class Users {
     await this.db.User.confirmEmail(params);
     res.json({});
   }
+
+  /**
+   * Get user's prifile data
+   *
+   * @async
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
+  async profile(req, res, next) {
+    const { id } = req.user;
+    const attributes = ['name', 'email'];
+    const user = await this.db.User.findOneByParams({ id }, attributes);
+    res.json(user);
+  }
 }
 
 module.exports = Users;
