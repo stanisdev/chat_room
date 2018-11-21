@@ -110,7 +110,7 @@ module.exports = (sequelize, DataTypes) => {
       const key = randomString.generate(
         config.USER_EMAIL_CONFIRMATION_KEY.LENGTH
       );
-      sequelize
+      return sequelize
         .transaction(function(t) {
           return User.create(
             {

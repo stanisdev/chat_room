@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     let { members, type } = params;
     let _chat;
     return new Promise((resolve, reject) => {
-      sequelize
+      return sequelize
         .transaction(function(t) {
           return Chat.create(
             {
@@ -227,10 +227,10 @@ module.exports = (sequelize, DataTypes) => {
     return chats;
   };
 
-  Chat.addMember = async function(params) {
+  Chat.addMember = function(params) {
     // @TODO: Create system message "User added to chat"
     const { chatId, userId } = params;
-    sequelize.transaction(function(t) {
+    return sequelize.transaction(function(t) {
       return models.ChatMember.create(
         {
           user_id: userId,
@@ -251,7 +251,6 @@ module.exports = (sequelize, DataTypes) => {
         );
       });
     });
-    return true;
   };
 
   return Chat;

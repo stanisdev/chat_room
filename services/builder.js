@@ -4,7 +4,15 @@ const config = require(process.env.CONFIG_PATH);
 const { SERVICES_PATH, CODES_PATH, MAILER } = config;
 const codes = require(CODES_PATH);
 const db = require(config.STORAGES_PATH);
-const { routes, wrapper, errors, other, logger, jwt } = require(SERVICES_PATH);
+const {
+  routes,
+  wrapper,
+  errors,
+  other,
+  logger,
+  jwt,
+  events,
+} = require(SERVICES_PATH);
 const mailer = require(MAILER.PATH);
 const _validators = require(config.VALIDATORS_PATH);
 const _ = require('lodash');
@@ -14,6 +22,7 @@ const context = {
     ...other,
     mailer,
     jwt,
+    events,
   },
   codes,
   config,

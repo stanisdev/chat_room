@@ -1,3 +1,5 @@
+const only = require('only');
+
 /**
  * This is the class to provide messages of chats
  */
@@ -42,12 +44,24 @@ class Messages {
    */
   async create(req, res, next) {
     const { content, type } = req.body;
-    const message = await this.db.Message.createNew({
+    const { message, members } = await this.db.Message.createNew({
       userId: req.user.id,
       chatId: req.params.chat_id,
       content,
       type,
     });
+    const recipients = members
+      .filter(member => member.user_id !== req.user.id)
+      .map(member => member.user_id);
+    message.user = only(req.user, 'id name');
+    const socketData = {
+      message: only(
+        message,
+        'id chat_id content type created_at quote_for user'
+      ),
+      recipients,
+    };
+    this.services.events.emit('chat/write', socketData);
     res.json(message);
   }
 }

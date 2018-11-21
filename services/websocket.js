@@ -10,8 +10,9 @@ const config = require(process.env.CONFIG_PATH);
  * to connect again and connection for each one should be established.
  */
 class Websocket {
-  constructor(server) {
+  constructor(server, events) {
     this.server = server;
+    this.events = events;
     this.db = require(config.STORAGES_PATH).getConnection();
     this.clients = {};
   }
@@ -22,6 +23,7 @@ class Websocket {
       autoAcceptConnections: false,
     });
     this.listen();
+    this.subscribeEvents();
   }
 
   listen() {
@@ -40,17 +42,28 @@ class Websocket {
           throw new Error('Wrong token or user not found');
         }
         userId = id;
-        this.clients[userId];
       } catch (err) {
         return request.reject();
       }
       const connection = request.accept(null, request.origin);
+      this.clients[userId] = connection;
 
       connection.on('message', message => {});
       connection.on('close', message => {
         delete this.clients[userId];
       });
       connection.sendUTF('Hello');
+    });
+  }
+
+  subscribeEvents() {
+    this.events.on('chat/write', data => {
+      const message = JSON.stringify(data.message);
+      data.recipients.forEach(recipient => {
+        if (this.clients.hasOwnProperty(recipient)) {
+          this.clients[recipient].sendUTF(message);
+        }
+      });
     });
   }
 }

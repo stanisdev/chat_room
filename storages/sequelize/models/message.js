@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         chat_id: chatId,
       })
         .then(members => {
-          sequelize
+          return sequelize
             .transaction(function(t) {
               return Message.create(
                 {
@@ -72,11 +72,12 @@ module.exports = (sequelize, DataTypes) => {
               });
             })
             .then(() => {
-              resolve(
-                _message.get({
+              resolve({
+                message: _message.get({
                   plain: true,
-                })
-              );
+                }),
+                members,
+              });
             })
             .catch(reject);
         })
