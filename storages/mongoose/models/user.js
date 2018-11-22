@@ -134,5 +134,13 @@ statics.confirmEmail = function(params) {
   ]);
 };
 
+statics.countByParams = function(params) {
+  if (params.hasOwnProperty('id')) {
+    params._id = params.id;
+    delete params.id;
+  }
+  return this.find(params).countDocuments();
+};
+
 userSchema.statics = statics;
 mongoose.model('User', userSchema);

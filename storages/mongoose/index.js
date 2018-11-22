@@ -39,6 +39,8 @@ const mongooseConnection = {
    * Run seeders
    */
   async seed() {
+    const rootDir = path.dirname(path.dirname(__dirname));
+    process.env.CONFIG_PATH = path.join(rootDir, 'config');
     await this.connect();
     const db = require('mongoose');
     const seedersPath = path.join(__dirname, 'seeders');
@@ -63,6 +65,7 @@ if (typeof process.env.SEED === 'string' && process.env.SEED.length > 0) {
     .seed()
     .then(() => {
       console.log('Successful');
+      process.exit();
     })
     .catch(err => {
       console.log(err);

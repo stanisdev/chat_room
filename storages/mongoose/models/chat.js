@@ -10,11 +10,6 @@ const chatSchema = new mongoose.Schema({
     type: String,
     maxlength: 150,
   },
-  members_count: {
-    type: Number,
-    default: 2,
-    required: true,
-  },
   type: {
     type: Number,
     required: true,
@@ -44,32 +39,50 @@ const chatSchema = new mongoose.Schema({
   },
 });
 
-statics.checkDialogExistence = function() {};
+statics.checkDialogExistence = async function(userId, interlocutorId) {
+  const { chats } = await mongoose.model('User').findOne(
+    {
+      _id: userId,
+    },
+    'chats'
+  );
+  const chat = await this.findOne({
+    _id: { $in: chats },
+    members: {
+      $elemMatch: { user: interlocutorId },
+    },
+  });
+  return {
+    exists: chat instanceof Object,
+    chat,
+  };
+};
 
 statics.createNew = async function(params) {
-  let { members, type } = params;
-  members = members.map(member => {
+  let { members, type, userId } = params;
+  members.push(userId);
+  members = members.map(memberId => {
     return {
-      user: member,
+      user: memberId,
     };
   });
   const chat = new this({
     type,
-    members_count: members.length,
     members,
   });
-  const { _id } = await chat.save();
+  await chat.save();
   const tasks = [];
   for (let a = 0; a < members.length; a++) {
     const member = members[a];
     tasks.push(
       this.model('User').updateOne(
         { _id: member.user },
-        { $push: { chats: _id } }
+        { $push: { chats: chat._id } }
       )
     );
   }
-  return Promise.all(tasks);
+  await Promise.all(tasks);
+  return chat;
 };
 
 chatSchema.statics = statics;

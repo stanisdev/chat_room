@@ -33,8 +33,9 @@ module.exports = (sequelize, DataTypes) => {
 
   Chat.createNew = function(params) {
     const { models } = sequelize;
-    let { members, type } = params;
+    let { members, type, userId } = params;
     let _chat;
+    members.push(userId);
     return new Promise((resolve, reject) => {
       return sequelize
         .transaction(function(t) {
@@ -68,21 +69,22 @@ module.exports = (sequelize, DataTypes) => {
 
   Chat.checkDialogExistence = async function(userId, interlocutorId) {
     const query = `
-      SELECT count(ch.id) count, ch.id chat_id FROM Chats ch 
-      LEFT JOIN ChatMembers chm ON ch.id = chm.chat_id
-      WHERE ch.type = 0 AND (chm.user_id = ? OR chm.user_id = ?)
-      GROUP BY ch.id
-      HAVING count > 1
+      SELECT count(ch.id) AS "count", "ch"."id" AS "chat_id" FROM "public"."Chats" AS ch
+      LEFT JOIN "public"."ChatMembers" AS chm ON ch.id = chm.chat_id
+      WHERE "ch"."type" = 0 AND ("chm"."user_id" = ? OR "chm"."user_id" = ?)
+      GROUP BY "ch"."id"
+      HAVING count(ch.id) > 1
     `;
     const [result] = await sequelize.query(query, {
       type: sequelize.QueryTypes.SELECT,
       replacements: [userId, interlocutorId],
     });
-    const exists = result instanceof Object && result.count === 2;
-    return {
-      exists,
-      chatId: exists ? result.chat_id : null,
-    };
+    const exists = result instanceof Object && +result.count === 2;
+    let chat = null;
+    if (exists) {
+      chat = await this.findByParams({ id: result.chat_id });
+    }
+    return { exists, chat };
   };
 
   Chat.findByParams = async function(params) {

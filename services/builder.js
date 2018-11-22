@@ -39,6 +39,9 @@ const builder = {
     logger(__filename).info(
       'Database connection has been established successfully'
     );
+    const middlewares = glob.sync(config.MIDDLEWARES_PATH + '/*.js');
+    middlewares.forEach(middleware => app.use(require(middleware)));
+
     context.db = db.getConnection();
     const _filters = require(config.FILTERS_PATH);
 

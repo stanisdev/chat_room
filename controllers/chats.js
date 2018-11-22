@@ -1,3 +1,5 @@
+const status = require('http-status');
+
 /**
  * This is the class to provide chats
  */
@@ -29,7 +31,7 @@ class Chats {
    *
    * Expected POST fields:
    *  type<Number>,
-   *  members<Array>
+   *  members<Array[Number]>
    *
    * @async
    * @param {Object} req
@@ -42,14 +44,17 @@ class Chats {
     if (type === 0) {
       const check = await this.db.Chat.checkDialogExistence(userId, ...members);
       if (check instanceof Object && check.exists === true) {
-        const chat = await this.db.Chat.findByParams({
-          id: check.chatId,
-        });
-        return res.json(chat);
+        return res.json(check.chat);
       }
     }
-    members.push(userId);
-    const chat = await this.db.Chat.createNew({ type, members });
+    const usersCount = await this.db.User.countByParams({
+      id: members,
+    });
+    if (usersCount !== members.length) {
+      // One of the transferred users does not exist
+      return res.status(status.BAD_REQUEST).json({});
+    }
+    const chat = await this.db.Chat.createNew({ type, members, userId });
     res.json(chat);
   }
 
