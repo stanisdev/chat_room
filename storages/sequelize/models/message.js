@@ -102,7 +102,7 @@ module.exports = (sequelize, DataTypes) => {
    *
    * @async
    * @param {Object} params
-   * @return {Promise<Object>}
+   * @return {Promise<Array[Object]>}
    */
   Message.findAllByChat = async function(params) {
     const { userId, chatId, limit, offset } = params;

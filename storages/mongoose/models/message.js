@@ -88,5 +88,63 @@ statics.createNew = async function(params) {
   return { message, members };
 };
 
+/**
+ * Find list of messages of chat with transferred parameters
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise<Array[Object]>}
+ */
+statics.findAllByChat = async function(params) {
+  const { userId, chatId, limit, offset } = params;
+  const messages = await this.aggregate([
+    {
+      $match: {
+        statuses: {
+          $elemMatch: { user: userId },
+        },
+        chat_id: chatId,
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user_id',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        id: '$_id',
+        type: 1,
+        content: 1,
+        edited: 1,
+        quote_for: 1,
+        statuses: {
+          $filter: {
+            input: '$statuses',
+            as: 'status',
+            cond: { $eq: ['$$status.user', userId] },
+          },
+        },
+        'user._id': 1,
+        'user.name': 1,
+      },
+    },
+    {
+      $unwind: '$user',
+    },
+    {
+      $unwind: '$statuses',
+    },
+  ])
+    .skip(offset)
+    .limit(limit);
+
+  return messages;
+};
+
 messageSchema.statics = statics;
 mongoose.model('Message', messageSchema);
