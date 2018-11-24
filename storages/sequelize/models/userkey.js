@@ -20,8 +20,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  /**
+   * To associate UserKey model with other models
+   *
+   * @param {Object} models
+   */
   UserKey.associate = function(models) {};
 
+  /**
+   * Find one key of user by filter parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   UserKey.findOneByParams = function(params) {
     return UserKey.findOne({
       where: params,
@@ -30,6 +42,13 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * Remove one key of user by filter parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise}
+   */
   UserKey.removeOneByParams = function(params) {
     return UserKey.destroy({
       where: params,

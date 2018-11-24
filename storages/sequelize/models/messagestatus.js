@@ -25,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  /**
+   * To associate MessageStatus model with other models
+   *
+   * @param {Object} models
+   */
   MessageStatus.associate = function(models) {
     MessageStatus.belongsTo(models.Message);
   };

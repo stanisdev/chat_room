@@ -4,6 +4,9 @@ const randomString = require('randomstring');
 const config = require(process.env.CONFIG_PATH);
 const statics = {};
 
+/**
+ * Define schema of user
+ */
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -62,10 +65,21 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Virtual field "id"
+ */
 userSchema.virtual('id').get(function() {
   return this._id;
 });
 
+/**
+ * Find one user by filter parameters
+ *
+ * @async
+ * @param {Object} params
+ * @param {Array} attributes=[]
+ * @return {Promise<Object>}
+ */
 statics.findOneByParams = function(params, attributes = []) {
   attributes = ['_id', 'name', 'email', 'status', 'blocked']
     .concat(attributes)
@@ -73,6 +87,13 @@ statics.findOneByParams = function(params, attributes = []) {
   return this.findOne(mongoose.beautifyId(params)).select(attributes);
 };
 
+/**
+ * Create new user
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise<Object>}
+ */
 statics.createNew = async function(params) {
   const { email, name, password } = params;
   const salt = randomString.generate(8);
@@ -100,11 +121,25 @@ statics.createNew = async function(params) {
   return true;
 };
 
+/**
+ * Check password correctness with bcrypt
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise<Boolean>}
+ */
 statics.checkPassword = function(params) {
   const { password, hash, salt } = params;
   return bcrypt.compare(password + salt, hash);
 };
 
+/**
+ * To log time when user logged in
+ *
+ * @async
+ * @param {Number} userId
+ * @return {Promise}
+ */
 statics.updateLastLogin = function(userId) {
   return this.updateOne(
     { _id: userId },
@@ -116,6 +151,13 @@ statics.updateLastLogin = function(userId) {
   );
 };
 
+/**
+ * Confirm user's email
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise}
+ */
 statics.confirmEmail = function(params) {
   const { keyId, userId } = params;
   const UserKey = this.model('UserKey');
@@ -134,6 +176,13 @@ statics.confirmEmail = function(params) {
   ]);
 };
 
+/**
+ * To count amount of user by filter parameters
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise<Number>}
+ */
 statics.countByParams = function(params) {
   if (params.hasOwnProperty('id')) {
     params._id = params.id;

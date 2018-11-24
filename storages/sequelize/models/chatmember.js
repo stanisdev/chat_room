@@ -19,11 +19,23 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  /**
+   * To associate ChatMember model with other models
+   *
+   * @param {Object} models
+   */
   ChatMember.associate = function(models) {
     ChatMember.belongsTo(models.Chat);
     ChatMember.belongsTo(models.User);
   };
 
+  /**
+   * Find one member of chat by filter parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   ChatMember.findOneByParams = function(params) {
     return ChatMember.findOne({
       where: params,
@@ -32,6 +44,13 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * Find all members of chat by filter parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   ChatMember.findAllByParams = function(params) {
     return ChatMember.findAll({
       where: params,

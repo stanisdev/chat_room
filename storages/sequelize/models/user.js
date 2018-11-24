@@ -171,7 +171,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
-   * Checking password correctness within bcrypt
+   * Checking password correctness with bcrypt
    *
    * @async
    * @param {Object} params
@@ -186,8 +186,8 @@ module.exports = (sequelize, DataTypes) => {
    * To log time when user logged in
    *
    * @async
-   * @param {Object} params
-   * @return {Promise<Object>}
+   * @param {Number} userId
+   * @return {Promise}
    */
   User.updateLastLogin = function(userId) {
     return User.update(

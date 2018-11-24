@@ -30,11 +30,23 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
+  /**
+   * To associate Message model with other models
+   *
+   * @param {Object} models
+   */
   Message.associate = function(models) {
     Message.hasMany(models.MessageStatus);
     Message.belongsTo(models.User, { as: 'user' });
   };
 
+  /**
+   * Create new message of chat with transferred parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   Message.createNew = function(params) {
     const { userId, chatId, content, type } = params;
     return new Promise((resolve, reject) => {
@@ -85,6 +97,13 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * Find list of messages of chat with transferred parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   Message.findAllByChat = async function(params) {
     const { userId, chatId, limit, offset } = params;
     const messageStatuses = await models.MessageStatus.findAll({

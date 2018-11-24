@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const statics = {};
 
+/**
+ * Define schema of keys of users
+ */
 const userKeySchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.ObjectId,
@@ -16,6 +19,13 @@ const userKeySchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Find one key of user by filter parameters
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise<Object>}
+ */
 statics.findOneByParams = function(params) {
   return this.findOne(params);
 };

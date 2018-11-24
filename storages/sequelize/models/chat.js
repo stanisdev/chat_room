@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
+  /**
+   * To associate Chat model with other models
+   *
+   * @param {Object} models
+   */
   Chat.associate = function(models) {
     Chat.belongsToMany(models.User, {
       through: models.ChatMember,
@@ -31,6 +36,13 @@ module.exports = (sequelize, DataTypes) => {
     Chat.hasMany(models.ChatMember);
   };
 
+  /**
+   * Create new chat with transferred parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   Chat.createNew = function(params) {
     const { models } = sequelize;
     let { members, type, userId } = params;
@@ -67,6 +79,14 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * Check whether dialog exists among transferred users
+   *
+   * @async
+   * @param {Number} userId
+   * @param {Number} interlocutorId
+   * @return {Promise<Object>}
+   */
   Chat.checkDialogExistence = async function(userId, interlocutorId) {
     const query = `
       SELECT count(ch.id) AS "count", "ch"."id" AS "chat_id" FROM "public"."Chats" AS ch
@@ -87,6 +107,13 @@ module.exports = (sequelize, DataTypes) => {
     return { exists, chat };
   };
 
+  /**
+   * Find chat with transferred parameters
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   Chat.findByParams = async function(params) {
     const chat = await Chat.findOne({
       where: params,
@@ -96,6 +123,13 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  /**
+   * Find list of chats of user
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Array[Object]>}
+   */
   Chat.getManyByUser = async function(params) {
     const { userId, limit, offset } = params;
     const memberships = await models.ChatMember.findAll({
@@ -229,6 +263,13 @@ module.exports = (sequelize, DataTypes) => {
     return chats;
   };
 
+  /**
+   * Add member to chat
+   *
+   * @async
+   * @param {Object} params
+   * @return {Promise<Object>}
+   */
   Chat.addMember = function(params) {
     // @TODO: Create system message "User added to chat"
     const { chatId, userId } = params;

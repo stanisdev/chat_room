@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const statics = {};
 
+/**
+ * Define schema of chat
+ */
 const chatSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,6 +42,14 @@ const chatSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Check whether dialog exists among transferred users
+ *
+ * @async
+ * @param {Number} userId
+ * @param {Number} interlocutorId
+ * @return {Promise<Object>}
+ */
 statics.checkDialogExistence = async function(userId, interlocutorId) {
   const { chats } = await mongoose.model('User').findOne(
     {
@@ -58,6 +69,13 @@ statics.checkDialogExistence = async function(userId, interlocutorId) {
   };
 };
 
+/**
+ * Create new chat with transferred parameters
+ *
+ * @async
+ * @param {Object} params
+ * @return {Promise<Object>}
+ */
 statics.createNew = async function(params) {
   let { members, type, userId } = params;
   members.push(userId);
