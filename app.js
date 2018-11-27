@@ -16,9 +16,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const config = require(process.env.CONFIG_PATH);
 const builder = require(path.join(config.SERVICES_PATH, 'builder'));
 
-module.exports = new Promise((resolve, reject) => {
-  builder
-    .init(app)
-    .then(resolve.bind(null, app))
-    .catch(reject);
-});
+module.exports = builder.init(app);

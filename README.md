@@ -19,3 +19,5 @@ And for testing to able to create new db:
 ```bash
 postgres=\# alter role <test_username> with createdb;
 ```
+-------------
+The application is still in development ...

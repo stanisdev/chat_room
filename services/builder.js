@@ -118,6 +118,7 @@ const builder = {
     });
 
     errors(app);
+    return app;
   },
 };
 
